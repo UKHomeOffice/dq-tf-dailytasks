@@ -2,7 +2,6 @@ provider "aws" {
   region = "eu-west-2"
 }
 
-<<<<<<< HEAD
 # path for zipped file
 =======
 >>>>>>> 2575203... startup configuration file added
