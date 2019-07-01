@@ -107,7 +107,7 @@ resource "aws_cloudwatch_event_rule" "daily_rds_startup" {
 # Defines target for the rule - the Lambda function to trigger
 # Points to the Lambda function
 
-resource "aws_cloudwatch_event_target" "ec2_lambda_target" {
+resource "aws_cloudwatch_event_target" "rds_lambda_target" {
     target_id = "rds_startup-function"
     rule      = "${aws_cloudwatch_event_rule.daily_rds_startup.name}"
     arn       = "${aws_lambda_function.rds_startup-function.arn}"
