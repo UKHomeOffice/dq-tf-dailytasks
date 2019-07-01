@@ -2,9 +2,7 @@ provider "aws" {
   region = "eu-west-2"
 }
 
-# path for zipped file
-=======
->>>>>>> 2575203... startup configuration file added
+
 data "archive_file" "ecstartzip" {
   type        = "zip"
   source_file = "${local.path_module}/lambda/code/ec2-startup.py"
@@ -103,7 +101,7 @@ resource "aws_iam_role_policy_attachment" "eventwatch_ec2_policy_attachment" {
 
 resource "aws_cloudwatch_event_rule" "daily_ec2_startup" {
   name                = "daily_ec2_startup"
-  description         = "triggers daily ec2 shutdown"
+  description         = "triggers daily ec2 startup"
   schedule_expression = "cron(5 14 ? * MON-FRI *)"
 }
 
@@ -111,7 +109,7 @@ resource "aws_cloudwatch_event_rule" "daily_ec2_startup" {
 # Points to the Lamda function
 
 resource "aws_cloudwatch_event_target" "ec2_lambda_target" {
-  target_id = "ec2_shutdown2"
+  target_id = "ec2_startup-function"
   rule      = "${aws_cloudwatch_event_rule.daily_ec2_startup.name}"
   arn       = "${aws_lambda_function.ec2-startup-function.arn}"
 }
