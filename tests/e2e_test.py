@@ -8,11 +8,12 @@ class TestE2E(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.snippet = """
+
             provider "aws" {
               region = "eu-west-2"
               skip_credentials_validation = true
               skip_get_ec2_platforms = true
-            }
+            } 
 
             module "dailytasks" {
               source = "./mymodule"
@@ -20,12 +21,14 @@ class TestE2E(unittest.TestCase):
               providers = {
                 aws = "aws"
               }
+  
                
               path_module          =   "unset"
               az2                  =   "eu-west-2b"
               namespace            =   "notprod"
               naming_suffix        =   "motprod-dq"
-            }
+            } 
+
         """
         self.result = Runner(self.snippet).result
     
