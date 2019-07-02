@@ -26,7 +26,7 @@ class TestE2E(unittest.TestCase):
               path_module          =   "unset"
               az2                  =   "eu-west-2b"
               namespace            =   "notprod"
-              naming_suffix        =   "motprod-dq"
+              naming_suffix        =   "notprod-dq"
             } 
 
         """
