@@ -21,7 +21,6 @@ module "root_modules" {
   providers = {aws = "aws"}
 
   path_module          =   "unset"
-  az2                  =   "eu-west-2b"
 }
 
         """
