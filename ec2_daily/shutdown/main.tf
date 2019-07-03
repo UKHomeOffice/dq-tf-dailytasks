@@ -1,3 +1,5 @@
+# Terraform Main Config
+
 provider "aws" {
   region  =   "eu-west-2"
 }
