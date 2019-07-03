@@ -8,41 +8,38 @@ class TestE2E(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.snippet = """
-            provider "aws" {
-              region = "eu-west-2"
-              skip_credentials_validation = true
-              skip_get_ec2_platforms = true
-            } 
 
-            module "root_modules" {
-              source = "./mymodule"
+provider "aws" {
+  region = "eu-west-2"
+  skip_credentials_validation = true
+  skip_get_ec2_platforms = true
+}
 
-              providers = {
-                aws = "aws"
-              }
-  
-               
-              path_module          =   "unset"
-              az2                  =   "eu-west-2b"
-              namespace            =   "notprod"
-              naming_suffix        =   "notprod-dq"
-            } 
+module "root_modules" {
+  source = "./mymodule"
+  providers = {aws = "aws"}
+
+  path_module          =   "unset"
+  az2                  =   "eu-west-2b"
+  namespace            =   "notprod"
+  naming_suffix        =   "notprod-dq"
+}
 
         """
         self.result = Runner(self.snippet).result
-    
+
     def test_root_destroy(self):
         self.assertEqual(self.result["destroy"], False)
 
     def test_aws_lambda_function_ec2startup_tags(self):
         self.assertEqual(self.result['root_modules']["aws_lambda_function.ec2-startup-function"]["tags.Name"], "ec2_daily_startup")
-    
+
     def test_aws_lambda_function_ec2shutdown_tags(self):
         self.assertEqual(self.result['root_modules']["aws_lambda_function.ec2-shutdown-function"]["tags.Name"], "ec2_daily_shutdown")
-   
+
     def test_aws_lambda_function_rdsshutdown_tags(self):
         self.assertEqual(self.result['root_modules']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_daily_shutdown")
- 
+
     def test_aws_lambda_function_rdsstartup_tags(self):
         self.assertEqual(self.result['root_modules']["aws_lambda_function.rds-startup-function"]["tags.Name"], "rds_daily_startup")
 
@@ -51,13 +48,13 @@ class TestE2E(unittest.TestCase):
 
     def test_iam_lambda_ec2_startup_role_tags(self):
         self.assertEqual(self.result['root_modules']["aws_iam_role.ec2_startup_role"]["tags.Name"], "ec2_startup-role")
-    
+
     def test_iam_lambda_rds_shutdown_role_tags(self):
         self.assertEqual(self.result['root_modules']["aws_iam_role.rds-shutdown_role"]["tags.Name"], "rds-shutdown_role")
-   
+
     def test_iam_lambda_rds_startup_role_tags(self):
         self.assertEqual(self.result['root_modules']["aws_iam_role.rds_startup_role"]["tags.Name"], "rds_startup_role")
-    
+
     def test_iam_policy_document_logs_tags(self):
         self.assertEqual(self.result['root_modules']["aws_iam_policy_document.eventwatch_logs_doc"]["tags.Name"], "eventwatch_logs_doc")
 
@@ -92,12 +89,12 @@ class TestE2E(unittest.TestCase):
         self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_rule.daily_ec2_startup"]["tags.Name"], "daily_ec2_startup")
 
     def test_cloudwatch_rdsshut_event_rule(self):
-        self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_rule.daily_rds-shutdown"]["tags.Name"], "daily_rds-shutdown")    
+        self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_rule.daily_rds-shutdown"]["tags.Name"], "daily_rds-shutdown")
 
     def test_cloudwatch_rdsstart__event_rule(self):
         self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_rule.daily_rds-startup"]["tags.Name"], "daily_rds-startup")
-    
-   
+
+
     def test_cloudwatch_event_ec2target(self):
         self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_target.ec2_lambda_target"]["tags.Name"], "ec2_lambda_target")
 
