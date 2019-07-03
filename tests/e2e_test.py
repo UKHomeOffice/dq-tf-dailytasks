@@ -22,8 +22,6 @@ module "root_modules" {
 
   path_module          =   "unset"
   az2                  =   "eu-west-2b"
-  namespace            =   "notprod"
-  naming_suffix        =   "notprod-dq"
 }
 
         """
