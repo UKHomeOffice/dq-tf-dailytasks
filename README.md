@@ -9,7 +9,7 @@ It consists of the following core elements:
 
 # main.tf
   This file comprises of following resources
-  - "archive file"
+  - AWS archive file
   - AWS Lambda Function
   - AWS IAM Role
   - AWS IAM Policy Documents
