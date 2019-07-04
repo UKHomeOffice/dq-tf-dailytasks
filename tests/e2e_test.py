@@ -9,7 +9,6 @@ class TestE2E(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.snippet = """
-
             provider "aws" {
               region = "eu-west-2"
               skip_credentials_validation = true
@@ -18,12 +17,7 @@ class TestE2E(unittest.TestCase):
 
             module "root_modules" {
               source = "./mymodule"
-
-              providers = {
-                aws = "aws"
-              }
-
-              path_module          =   "unset"
+              providers = {aws = "aws}
               }
 
         """
