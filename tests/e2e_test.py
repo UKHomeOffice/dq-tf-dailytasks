@@ -17,7 +17,7 @@ class TestE2E(unittest.TestCase):
 
             module "root_modules" {
               source = "./mymodule"
-              providers = {aws = "aws}
+              providers = {aws = "aws"}
               }
 
         """
