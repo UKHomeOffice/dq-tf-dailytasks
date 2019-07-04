@@ -5,8 +5,8 @@ provider "aws" {
 
 data "archive_file" "rds_shutdownzip" {
   type   =  "zip"
-  source_dir = "${local.path_module}/lambda/code"
-  output_path = "${local.path_module}/lambda/package/rds_shutdownzip"
+  source_dir = "${path.module}/lambda/code"
+  output_path = "${path.module}/lambda/package/rds_shutdownzip"
 }
 
 
