@@ -6,6 +6,9 @@ pipeline:
       - DOCKER_HOST=tcp://172.17.0.1:2375
     commands:
       - docker run --rm -v $(pwd):/data -w /data hashicorp/terraform fmt --diff --check
+    secrets:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
     when:
       event: push
 
