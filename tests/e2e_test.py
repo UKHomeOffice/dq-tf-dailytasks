@@ -20,6 +20,8 @@ class TestE2E(unittest.TestCase):
               providers = {aws = "aws"}
 
             path_module = "./"
+            naming_suffix = "apps-preprod-dq"
+            namespace     = "preprod"
               }
         """
         self.result = Runner(self.snippet).result
@@ -27,8 +29,8 @@ class TestE2E(unittest.TestCase):
     def test_root_destroy(self):
         self.assertEqual(self.result["destroy"], False)
 
-    def test_aws_lambda_function_rds_shutdown_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_shutdown")
+    def test__name_suffix_aws_lambda_function_rds_shutdown_tags(self):
+        self.assertEqual(self.result['root_modules']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_shutdown-apps-preprod-dq")
 
     def test_iam_lambda_rds_shutdown_role_tags(self):
         self.assertEqual(self.result['root_modules']["aws_iam_role.rds-shutdown_role"]["tags.Name"], "rds-shutdown_role")
