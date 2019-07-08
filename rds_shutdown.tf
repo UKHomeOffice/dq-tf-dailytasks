@@ -1,3 +1,4 @@
+# RDS Daily shutdown script
 provider "aws" {
   region  =   "eu-west-2"
 }
