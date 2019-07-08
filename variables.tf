@@ -5,3 +5,7 @@ locals {
 variable "path_module" {
    default = "unset"
 }
+
+variable "namespace" {
+   default = "notprod"
+}

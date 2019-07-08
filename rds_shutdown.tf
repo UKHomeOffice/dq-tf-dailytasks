@@ -12,7 +12,7 @@ data "archive_file" "rds_shutdownzip" {
 
 
 resource "aws_lambda_function" "rds-shutdown-function" {
-    function_name = "rds_shutdown"
+    function_name = "rds_shutdown-${var.namespace}"
     handler ="rds_shutdown.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds-shutdown_role.arn}"
@@ -25,7 +25,7 @@ resource "aws_lambda_function" "rds-shutdown-function" {
 # IAM role
 
 resource "aws_iam_role" "rds-shutdown_role" {
-    name = "rds-shutdown_role"
+    name = "rds-shutdown_role-${var.namespace}"
 
     assume_role_policy = <<EOF
 {
@@ -75,13 +75,13 @@ data "aws_iam_policy_document" "eventwatch_rds_doc" {
 }
 
 resource "aws_iam_policy" "eventwatch_logs_policy" {
-    name  =  "eventwatch_logs_policy"
+    name  =  "eventwatch_logs_policy-${var.namespace}"
     path  = "/"
     policy = "${data.aws_iam_policy_document.eventwatch_logs_doc.json}"
 }
 
 resource "aws_iam_policy" "eventwatch_rds_policy" {
-    name = "eventwatch_rds_policy"
+    name = "eventwatch_rds_policy-${var.namespace}"
     path = "/"
     policy = "${data.aws_iam_policy_document.eventwatch_rds_doc.json}"
 }
@@ -100,7 +100,7 @@ resource "aws_iam_role_policy_attachment" "eventwatch_rds_policy_attachment" {
 # Creates CloudWatch Event Rule - triggers the Lambda function
 
 resource "aws_cloudwatch_event_rule" "daily_rds-shutdown" {
-    name  =  "daily_rds-shutdown"
+    name  =  "daily_rds-shutdown-${var.namespace}"
     description = "triggers daily RDS shutdown"
     schedule_expression = "cron(0 18 ? * MON-FRI *)"
 }
