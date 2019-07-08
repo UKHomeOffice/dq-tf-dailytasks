@@ -9,3 +9,7 @@ variable "path_module" {
 variable "namespace" {
    default = "notprod"
 }
+
+variable "naming_suffix" {
+   default = "apps-test-dq"
+}

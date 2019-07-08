@@ -15,12 +15,13 @@ class TestE2E(unittest.TestCase):
               skip_get_ec2_platforms = true
             }
 
-            module "root_modules" {
+            module "dailytasks" {
               source = "./mymodule"
               providers = {aws = "aws"}
 
             path_module = "./"
-            namespace     = "notprod"
+            namespace     = "preprod"
+            naming_suffix = "apps-preprod-dq"
               }
         """
         self.result = Runner(self.snippet).result
@@ -29,34 +30,7 @@ class TestE2E(unittest.TestCase):
         self.assertEqual(self.result["destroy"], False)
 
     def test__name_suffix_aws_lambda_function_rds_shutdown_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_shutdown-apps-preprod-dq")
-
-    def test_iam_lambda_rds_shutdown_role_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_role.rds-shutdown_role"]["tags.Name"], "rds-shutdown_role")
-
-    def test_iam_policy_document_logs_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_policy_document.eventwatch_logs_doc"]["tags.Name"], "eventwatch_logs_doc")
-
-    def test_iam_policy_document_rds_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_policy_document.eventwatch_rds_doc"]["tags.Name"], "eventwatch_rds_doc")
-
-    def test_iam_policy_logs_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_policy.eventwatch_logs_policy"]["tags.Name"], "eventwatch_logs_policy")
-
-    def test_iam_policy_rds_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_policy.eventwatch_rds_policy"]["tags.Name"], "eventwatch_rds_policy")
-
-    def test_iam_role_policy_attachment_logs_tag(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_role_policy_attachment.eventwatch_logs_policy_attachment"]["tags.Name"], "eventwatch_logs_policy_attachment")
-
-    def test_iam_role_policy_attachment_rds_tags(self):
-        self.assertEqual(self.result['root_modules']["aws_iam_role_policy_attachment.eventwatch_rds_policy_attachment"]["tags.Name"], "eventwatch_rds_policy_attachment")
-
-    def test_cloudwatch_rdsshut_event_rule(self):
-        self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_rule.daily_rds-shutdown"]["tags.Name"], "daily_rds-shutdown")
-
-    def test_cloudwatch_event_rdstarget(self):
-        self.assertEqual(self.result['root_modules']["aws_cloudwatch_event_target.rds_lambda_target"]["tags.Name"], "rds_lambda_target")
+        self.assertEqual(self.result['dailytasks']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_shutdown-apps-preprod-dq")
 
 if __name__ == '__main__':
     unittest.main()
