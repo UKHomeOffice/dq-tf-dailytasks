@@ -20,6 +20,10 @@ resource "aws_lambda_function" "rds-shutdown-function" {
     memory_size = 128
     timeout = "10"
     source_code_hash = "${data.archive_file.rds_shutdownzip.output_base64sha256}"
+
+    tags = {
+       Name  =  "rds-shutdown-${local.naming_suffix}"
+    }
 }
 
 # IAM role
@@ -42,6 +46,8 @@ resource "aws_iam_role" "rds-shutdown_role" {
   ]
 }
 EOF
+  tags = {
+    Name = "rds-shutdown_role-${local.naming_suffix}"
 }
 
 # IAM Policy
