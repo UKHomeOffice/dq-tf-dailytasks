@@ -94,7 +94,7 @@ resource "aws_iam_role" "rds_startup_role" {
 }
 EOF
   tags = {
-    Name = "rds-shutdown_role-${local.naming_suffix}"
+    Name = "rds_startup_role-${local.naming_suffix}"
   }
 }
 
