@@ -31,8 +31,6 @@ class TestE2E(unittest.TestCase):
             adminpassword                   = "1234"
             ad_aws_ssm_document_name        = "1234"
             ad_writer_instance_profile_name = "1234"
-            naming_suffix                   = "preprod-dq"
-            namespace                       = "preprod"
             haproxy_private_ip              = "1.2.3.3"
             haproxy_private_ip2             = "1.2.3.4"
               }
