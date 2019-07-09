@@ -8,7 +8,7 @@ This repo controls the deployment of Lambda Cloudwatch scheduled cost savings ta
 It consists of the following core elements:
 
 # main.tf
-  This file comprises of following resources
+  This file comprises of the following resources
   - AWS archive file
   - AWS Lambda Function
   - AWS IAM Role
@@ -21,7 +21,7 @@ It consists of the following core elements:
   Holds input data for resources within this repo.
 
 # tests/e2e_test.py
-  Code and resource tester with mock data. It can be expoanded by adding further definitions to the unit.
+  Code and resource tester with mock data. It can be expanded by adding further definitions to the unit.
 
 # Lambda Function Package
-  The Python Boto3 scripts used by Lambda.
+   Python Boto3 scripts required by Lambda.
