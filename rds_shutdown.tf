@@ -22,7 +22,7 @@ resource "aws_lambda_function" "rds-shutdown-function" {
     source_code_hash = "${data.archive_file.rds_shutdownzip.output_base64sha256}"
 
     tags = {
-       Name  =  "rds-shutdown-${local.naming_suffix}"
+       Name  =  "rds_shutdown-${local.naming_suffix}"
     }
 }
 
