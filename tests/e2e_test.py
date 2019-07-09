@@ -23,6 +23,18 @@ class TestE2E(unittest.TestCase):
             path_module = "./"
             namespace     = "preprod"
             naming_suffix = "apps-preprod-dq"
+            cidr_block                      = "10.1.0.0/16"
+            public_subnet_cidr_block        = "10.1.0.0/24"
+            ad_subnet_cidr_block            = "10.1.0.0/24"
+            az                              = "eu-west-2a"
+            az2                             = "eu-west-2b"
+            adminpassword                   = "1234"
+            ad_aws_ssm_document_name        = "1234"
+            ad_writer_instance_profile_name = "1234"
+            naming_suffix                   = "preprod-dq"
+            namespace                       = "preprod"
+            haproxy_private_ip              = "1.2.3.3"
+            haproxy_private_ip2             = "1.2.3.4"
               }
         """
         self.result = Runner(self.snippet).result
