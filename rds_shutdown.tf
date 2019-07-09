@@ -17,6 +17,15 @@ data "archive_file" "rds_startupzip" {
   output_path = "${local.path_module}/lambda/startup/package/rds_startup.zip"
 }
 
+### Archive file - ec2_startup
+data "archive_file" "ecstartzip" {
+  type        = "zip"
+  source_file = "${local.path_module}/lambda/startup/code/ec2-startup.py"
+  output_path = "${local.path_module}/lambda/startup/package/ec2-startup.zip"
+}
+
+
+
 resource "aws_lambda_function" "rds-shutdown-function" {
     function_name = "rds_shutdown-${var.naming_suffix}"
     handler ="rds_shutdown.lambda_handler"
@@ -47,6 +56,20 @@ resource "aws_lambda_function" "rds_startup-function" {
     }
 }
 
+resource "aws_lambda_function" "ec2-startup-function" {
+  function_name    = "ec2_daily_startup-${var.naming_suffix}"
+  handler          = "ec2-startup.lambda_handler"
+  runtime          = "python3.7"
+  role             = "${aws_iam_role.ec2_startup_role.arn}"
+  filename         = "${path.module}/lambda/package/ec2-startup.zip"
+  memory_size      = 128
+  timeout          = 10
+  source_code_hash = "${data.archive_file.ecstartzip.output_base64sha256}"
+
+  tags = {
+     Name   =   "ec2_daiy_startup-${local.naming_suffix}"
+  }
+}
 
 # IAM role
 
@@ -98,6 +121,31 @@ EOF
   }
 }
 
+# IAM role
+
+resource "aws_iam_role" "ec2_startup_role" {
+    name = "ec2_startup_role-${var.naming_suffix}"
+
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+  tags = {
+    Name = "ec2_startup_role-${local.naming_suffix}"
+  }
+}
+
 # IAM Policy
 
 data "aws_iam_policy_document" "eventwatch_logs_doc" {
@@ -128,6 +176,21 @@ data "aws_iam_policy_document" "eventwatch_rds_doc" {
     }
 }
 
+data "aws_iam_policy_document" "eventwatch_ec2_doc" {
+  statement {
+    actions = [
+      "ec2:DescribeInstances",
+      "ec2:DescribeRegions",
+      "ec2:StartInstances",
+      "ec2:StopInstances",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+}
+
 resource "aws_iam_policy" "eventwatch_logs_policy" {
     name  =  "eventwatch_logs_policy"
     path  = "/"
@@ -140,6 +203,12 @@ resource "aws_iam_policy" "eventwatch_rds_policy" {
     policy = "${data.aws_iam_policy_document.eventwatch_rds_doc.json}"
 }
 
+resource "aws_iam_policy" "eventwatch_ec2_policy" {
+  name   = "eventwatch_ec2_policy"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.eventwatch_ec2_doc.json}"
+}
+
 resource "aws_iam_role_policy_attachment" "eventwatch_logs_policy_attachment" {
     role     =   "${aws_iam_role.rds-shutdown_role.name}"
     policy_arn = "${aws_iam_policy.eventwatch_logs_policy.arn}"
@@ -150,6 +219,10 @@ resource "aws_iam_role_policy_attachment" "eventwatch_rds_policy_attachment" {
     policy_arn = "${aws_iam_policy.eventwatch_rds_policy.arn}"
 }
 
+resource "aws_iam_role_policy_attachment" "eventwatch_ec2_policy_attachment" {
+  role       = "${aws_iam_role.ec2_startup_role.name}"
+  policy_arn = "${aws_iam_policy.eventwatch_ec2_policy.arn}"
+}
 
 # Creates CloudWatch Event Rule - triggers the Lambda function
 
@@ -165,6 +238,12 @@ resource "aws_cloudwatch_event_rule" "daily_rds_startup" {
     schedule_expression = "cron(30 6 ? * MON-FRI *)"
 }
 
+resource "aws_cloudwatch_event_rule" "daily_ec2_startup" {
+  name                = "daily_ec2_startup"
+  description         = "triggers daily ec2 startup"
+  schedule_expression = "cron(0 7 ? * MON-FRI *)"
+}
+
 # Defines target for the rule - the Lambda function to trigger
 # Points to the Lamda function
 
@@ -178,4 +257,10 @@ resource "aws_cloudwatch_event_target" "rds_lambda_startup_target" {
     target_id = "rds_startup-function"
     rule      = "${aws_cloudwatch_event_rule.daily_rds_startup.name}"
     arn       = "${aws_lambda_function.rds_startup-function.arn}"
+}
+
+resource "aws_cloudwatch_event_target" "ec2_lambda_target" {
+  target_id = "ec2_startup-function"
+  rule      = "${aws_cloudwatch_event_rule.daily_ec2_startup.name}"
+  arn       = "${aws_lambda_function.ec2-startup-function.arn}"
 }
