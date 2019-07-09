@@ -12,7 +12,7 @@ data "archive_file" "rds_shutdownzip" {
 
 
 resource "aws_lambda_function" "rds-shutdown-function" {
-    function_name = "rds_shutdown-${var.namespace}"
+    function_name = "rds_shutdown-${var.naming_suffix}"
     handler ="rds_shutdown.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds-shutdown_role.arn}"
