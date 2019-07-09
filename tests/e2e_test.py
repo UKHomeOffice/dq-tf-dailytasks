@@ -29,6 +29,13 @@ class TestE2E(unittest.TestCase):
     def test_root_destroy(self):
         self.assertEqual(self.result["destroy"], False)
 
+    def test_aws_lambda_function_rdsshutdown_tags(self):
+        self.assertEqual(self.result['dailytasks']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_daily_shutdown")
+    
+    def test_iam_lambda_rds_shutdown_role_tags(self):
+        self.assertEqual(self.result['dailytasks']["aws_iam_role.rds-shutdown_role"]["tags.Name"], "rds-shutdown_role")
+
 
 if __name__ == '__main__':
     unittest.main()
+
