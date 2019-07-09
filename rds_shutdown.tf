@@ -46,8 +46,6 @@ resource "aws_iam_role" "rds-shutdown_role" {
   ]
 }
 EOF
-  tags = {
-    Name = "rds-shutdown_role-${local.naming_suffix}"
 }
 
 # IAM Policy
