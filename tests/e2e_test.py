@@ -17,7 +17,7 @@ class TestE2E(unittest.TestCase):
 
             module "dailytasks" {
               source = "./mymodule"
-              providers = {aws = "aws"}
+              #providers = {aws = "aws"}
 
             path_module = "./"
             namespace     = "preprod"
