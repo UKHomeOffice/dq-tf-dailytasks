@@ -29,7 +29,7 @@ resource "aws_lambda_function" "rds-shutdown-function" {
 # IAM role
 
 resource "aws_iam_role" "rds-shutdown_role" {
-    name = "rds-shutdown_role-${var.namespace}"
+    name = "rds-shutdown_role-${var.naming_suffix}"
 
     assume_role_policy = <<EOF
 {
@@ -46,6 +46,10 @@ resource "aws_iam_role" "rds-shutdown_role" {
   ]
 }
 EOF
+
+  tags = {
+    Name = "rds-shutdown_role-${local.naming_suffix}"
+  }
 }
 
 # IAM Policy
@@ -79,13 +83,13 @@ data "aws_iam_policy_document" "eventwatch_rds_doc" {
 }
 
 resource "aws_iam_policy" "eventwatch_logs_policy" {
-    name  =  "eventwatch_logs_policy-${var.namespace}"
+    name  =  "eventwatch_logs_policy"
     path  = "/"
     policy = "${data.aws_iam_policy_document.eventwatch_logs_doc.json}"
 }
 
 resource "aws_iam_policy" "eventwatch_rds_policy" {
-    name = "eventwatch_rds_policy-${var.namespace}"
+    name = "eventwatch_rds_policy"
     path = "/"
     policy = "${data.aws_iam_policy_document.eventwatch_rds_doc.json}"
 }
