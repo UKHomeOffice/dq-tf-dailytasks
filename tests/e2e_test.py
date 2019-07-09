@@ -47,6 +47,12 @@ class TestE2E(unittest.TestCase):
     def test_name_suffix_aws_iam_role_ec2_startup_role_tags(self):
           self.assertEqual(self.result['dailytasks']["aws_iam_role.ec2_startup_role"]["tags.Name"], "ec2_startup_role-apps-preprod-dq")
 
+    def test_name_suffix_aws_lambda_function_ec2shutdown_tags(self):
+          self.assertEqual(self.result['dailytasks']["aws_lambda_function.ec2-shutdown-function"]["tags.Name"], "ec2_daily_shutdown-apps-preprod-dq")
+
+    def test_name_suffix_aws_iam_role_ec2_shutdown_role_tags(self):
+          self.assertEqual(self.result['dailytasks']["aws_iam_role.ec2_shutdown_role"]["tags.Name"], "ec2_shutdown_role-apps-preprod-dq"
+
 if __name__ == '__main__':
     unittest.main()
 
