@@ -81,7 +81,7 @@ resource "aws_lambda_function" "ec2-shutdown-function" {
     function_name = "ec2_daily_shutdown-${var.naming_suffix}"
     handler ="ec2-shutdown.lambda_handler"
     runtime = "python3.7"
-    role = "${aws_iam_role.ec2_shutdown_testrole.arn}"
+    role = "${aws_iam_role.ec2_shutdown_role.arn}"
     filename = "${path.module}/lambda/package/ec2-shutdown.zip"
     memory_size = 128
     timeout = "10"
@@ -271,7 +271,7 @@ resource "aws_iam_role_policy_attachment" "eventwatch_ec2_policy_attachment" {
 }
 
 resource "aws_iam_role_policy_attachment" "eventwatch_ec2shutdown_policy_attachment" {
-    role     =   "${aws_iam_role.ec2_shutdown.name}"
+    role     =   "${aws_iam_role.ec2_shutdown_role.name}"
     policy_arn = "${aws_iam_policy.eventwatch_ec2_policy.arn}"
 }
 
