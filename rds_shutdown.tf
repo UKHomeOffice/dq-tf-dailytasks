@@ -174,7 +174,7 @@ resource "aws_cloudwatch_event_target" "rds_lambda_target" {
     arn       = "${aws_lambda_function.rds-shutdown-function.arn}"
 }
 
-resource "aws_cloudwatch_event_target" "rds_lambda_target" {
+resource "aws_cloudwatch_event_target" "rds_lambda_startup_target" {
     target_id = "rds_startup-function"
     rule      = "${aws_cloudwatch_event_rule.daily_rds_startup.name}"
     arn       = "${aws_lambda_function.rds_startup-function.arn}"
