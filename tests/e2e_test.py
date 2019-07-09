@@ -20,7 +20,7 @@ class TestE2E(unittest.TestCase):
               source = "./mymodule"
               providers = {aws = "aws"}
 
-            path_module = "./mymodule"
+            path_module = "./"
             namespace     = "preprod"
             naming_suffix = "apps-preprod-dq"
             cidr_block                      = "10.1.0.0/16"
