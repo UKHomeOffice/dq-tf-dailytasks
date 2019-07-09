@@ -3,13 +3,19 @@ provider "aws" {
   region  =   "eu-west-2"
 }
 
-
+### Archive file - rds_shutdown lambda
 data "archive_file" "rds_shutdownzip" {
   type   =  "zip"
   source_file = "${local.path_module}/lambda/code/rds_shutdown.py"
   output_path = "${local.path_module}/lambda/package/rds_shutdown.zip"
 }
 
+### Archive file - rds_startup lambda
+data "archive_file" "rds_startupzip" {
+  type   =  "zip"
+  source_file = "${local.path_module}/lambda/startup/code/rds_startup.py"
+  output_path = "${local.path_module}/lambda/startup/package/rds_startup.zip"
+}
 
 resource "aws_lambda_function" "rds-shutdown-function" {
     function_name = "rds_shutdown-${var.naming_suffix}"
@@ -25,6 +31,22 @@ resource "aws_lambda_function" "rds-shutdown-function" {
        Name  =  "rds_shutdown-${local.naming_suffix}"
     }
 }
+
+resource "aws_lambda_function" "rds_startup-function" {
+    function_name = "rds_daily_startup-${var.naming_suffix}"
+    handler ="rds_startup.lambda_handler"
+    runtime = "python3.7"
+    role = "${aws_iam_role.rds_startup_role.arn}"
+    filename = "${path.module}/lambda/package/rds_startup.zip"
+    memory_size = 128
+    timeout = "10"
+    source_code_hash = "${data.archive_file.rds_startupzip.output_base64sha256}"
+
+    tags = {
+       Name  =  "rds_daily_startup-${local.naming_suffix}"
+    }
+}
+
 
 # IAM role
 
@@ -46,7 +68,31 @@ resource "aws_iam_role" "rds-shutdown_role" {
   ]
 }
 EOF
+  tags = {
+    Name = "rds-shutdown_role-${local.naming_suffix}"
+  }
+}
 
+# IAM role
+
+resource "aws_iam_role" "rds_startup_role" {
+    name = "rds_startup_role-${var.naming_suffix}"
+
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
   tags = {
     Name = "rds-shutdown_role-${local.naming_suffix}"
   }
@@ -108,9 +154,15 @@ resource "aws_iam_role_policy_attachment" "eventwatch_rds_policy_attachment" {
 # Creates CloudWatch Event Rule - triggers the Lambda function
 
 resource "aws_cloudwatch_event_rule" "daily_rds-shutdown" {
-    name  =  "daily_rds-shutdown-${var.namespace}"
+    name  =  "daily_rds-shutdown"
     description = "triggers daily RDS shutdown"
     schedule_expression = "cron(0 18 ? * MON-FRI *)"
+}
+
+resource "aws_cloudwatch_event_rule" "daily_rds_startup" {
+    name  =  "daily_rds_startup"
+    description = "triggers daily RDS startup"
+    schedule_expression = "cron(30 6 ? * MON-FRI *)"
 }
 
 # Defines target for the rule - the Lambda function to trigger
@@ -120,4 +172,10 @@ resource "aws_cloudwatch_event_target" "rds_lambda_target" {
     target_id = "rds-shutdown-function"
     rule      = "${aws_cloudwatch_event_rule.daily_rds-shutdown.name}"
     arn       = "${aws_lambda_function.rds-shutdown-function.arn}"
+}
+
+resource "aws_cloudwatch_event_target" "rds_lambda_target" {
+    target_id = "rds_startup-function"
+    rule      = "${aws_cloudwatch_event_rule.daily_rds_startup.name}"
+    arn       = "${aws_lambda_function.rds_startup-function.arn}"
 }
