@@ -67,7 +67,7 @@ resource "aws_lambda_function" "ec2-startup-function" {
   source_code_hash = "${data.archive_file.ecstartzip.output_base64sha256}"
 
   tags = {
-     Name   =   "ec2_daiy_startup-${local.naming_suffix}"
+     Name   =   "ec2_daily_startup-${local.naming_suffix}"
   }
 }
 
