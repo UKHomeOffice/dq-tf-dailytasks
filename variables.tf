@@ -8,7 +8,7 @@ variable "path_module" {
 }
 
 variable "namespace" {
-   default = "notprod"
+   default = "test"
 }
 
 variable "naming_suffix" {
