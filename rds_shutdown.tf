@@ -52,7 +52,7 @@ resource "aws_lambda_function" "rds_startup-function" {
     handler ="rds_startup.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds_startup_role.arn}"
-    filename = "{data.archive_file.rds_startupzip.output_path}"
+    filename = "${data.archive_file.rds_startupzip.output_path}"
     memory_size = 128
     timeout = "10"
     source_code_hash = "${data.archive_file.rds_startupzip.output_base64sha256}"
@@ -67,7 +67,7 @@ resource "aws_lambda_function" "ec2-startup-function" {
   handler          = "ec2-startup.lambda_handler"
   runtime          = "python3.7"
   role             = "${aws_iam_role.ec2_startup_role.arn}"
-  filename         = "{data.archive_file.ecstartzip.output_path}"
+  filename         = "${data.archive_file.ecstartzip.output_path}"
   memory_size      = 128
   timeout          = 10
   source_code_hash = "${data.archive_file.ecstartzip.output_base64sha256}"
@@ -82,7 +82,7 @@ resource "aws_lambda_function" "ec2-shutdown-function" {
     handler ="ec2-shutdown.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.ec2_shutdown_role.arn}"
-    filename = "{data.archive_file.ecshutzip.output_path}"
+    filename = "${data.archive_file.ecshutzip.output_path}"
     memory_size = 128
     timeout = "10"
     source_code_hash = "${data.archive_file.ecshutzip.output_base64sha256}"
