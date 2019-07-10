@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     
 
     instanceOne='dev-postgres-internal-tableau-apps-notprod-dq'
-    instanceTwo='postgres-dataingest-apps-notprod-dq'
+    instanceTwo='ext-tableau-postgres-external-tableau-apps-notprod-dq'
     instanceThree='fms-postgres-fms-apps-notprod-dq'
     instanceFour='postgres-datafeeds-apps-notprod-dq'
     instanceFive='postgres-internal-tableau-apps-notprod-dq'
@@ -21,13 +21,13 @@ def lambda_handler(event, context):
 
     print('RDS Instannces starting...')
     
-    shutdown1=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceOne)
-    shutdown2=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceTwo)
-    shutdown3=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceThree)
-    shutdown4=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFour)
-    shutdown5=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFive)
-    shutdown6=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSix)
-    shutdown7=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSeven)
+    startup1=rds_inst.start_db_instance(DBInstanceIdentifier=instanceOne)
+    startup2=rds_inst.start_db_instance(DBInstanceIdentifier=instanceTwo)
+    startup3=rds_inst.start_db_instance(DBInstanceIdentifier=instanceThree)
+    startup4=rds_inst.start_db_instance(DBInstanceIdentifier=instanceFour)
+    startup5=rds_inst.start_db_instance(DBInstanceIdentifier=instanceFive)
+    startup6=rds_inst.start_db_instance(DBInstanceIdentifier=instanceSix)
+    startup7=rds_inst.start_db_instance(DBInstanceIdentifier=instanceSeven)
 
 
 

@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     
 
     instanceOne='dev-postgres-internal-tableau-apps-notprod-dq'
-    instanceTwo='postgres-dataingest-apps-notprod-dq'
+    instanceTwo='ext-tableau-postgres-external-tableau-apps-notprod-dq'
     instanceThree='fms-postgres-fms-apps-notprod-dq'
     instanceFour='postgres-datafeeds-apps-notprod-dq'
     instanceFive='postgres-internal-tableau-apps-notprod-dq'

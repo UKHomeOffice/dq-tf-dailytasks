@@ -37,7 +37,7 @@ resource "aws_lambda_function" "rds-shutdown-function" {
     handler ="rds_shutdown.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds-shutdown_role.arn}"
-    filename = "${path.module}/lambda/package/rds_shutdown.zip"
+    filename = "${data.archive_file.rds_shutdownzip.output_path}"
     memory_size = 128
     timeout = "10"
     source_code_hash = "${data.archive_file.rds_shutdownzip.output_base64sha256}"
