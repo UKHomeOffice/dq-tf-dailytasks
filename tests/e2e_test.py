@@ -21,8 +21,8 @@ class TestE2E(unittest.TestCase):
               providers = {aws = "aws"}
 
               path_module = "./"
-              namespace     = "preprod"
-              naming_suffix = "apps-preprod-dq"
+#              namespace     = "preprod"
+#              naming_suffix = "apps-preprod-dq"
             }
         """
         self.result = Runner(self.snippet).result
