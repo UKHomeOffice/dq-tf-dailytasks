@@ -10,7 +10,6 @@ class TestE2E(unittest.TestCase):
     def setUpClass(self):
         self.snippet = """
             provider "aws" {
-              region = "eu-west-2"
              #profile = "foo"
               skip_credentials_validation = true
               skip_get_ec2_platforms = true
@@ -56,4 +55,3 @@ class TestE2E(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
