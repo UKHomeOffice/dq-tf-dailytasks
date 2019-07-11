@@ -1,7 +1,5 @@
 # RDS Daily shutdown script
-provider "aws" {
-  region  =   "eu-west-2"
-}
+provider "aws" {}
 
 ### Archive file - rds_shutdown lambda
 data "archive_file" "rds_shutdownzip" {
