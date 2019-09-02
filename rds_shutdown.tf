@@ -252,13 +252,23 @@ resource "aws_iam_policy" "eventwatch_ec2_policy" {
   policy = "${data.aws_iam_policy_document.eventwatch_ec2_doc.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "eventwatch_logs_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "eventwatch_rds_shutdown_logs_policy_attachment" {
     role     =   "${aws_iam_role.rds-shutdown_role.name}"
     policy_arn = "${aws_iam_policy.eventwatch_logs_policy.arn}"
 }
 
-resource "aws_iam_role_policy_attachment" "eventwatch_rds_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "eventwatch_rds_shutdown_policy_attachment" {
     role    =    "${aws_iam_role.rds-shutdown_role.name}"
+    policy_arn = "${aws_iam_policy.eventwatch_rds_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "eventwatch_rds_startup_logs_policy_attachment" {
+    role    =    "${aws_iam_role.rds_startup_role.name}"
+    policy_arn = "${aws_iam_policy.eventwatch_logs_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "eventwatch_rds_startup_policy_attachment" {
+    role    =    "${aws_iam_role.rds_startup_role.name}"
     policy_arn = "${aws_iam_policy.eventwatch_rds_policy.arn}"
 }
 
@@ -271,6 +281,18 @@ resource "aws_iam_role_policy_attachment" "eventwatch_ec2shutdown_policy_attachm
     role     =   "${aws_iam_role.ec2_shutdown_role.name}"
     policy_arn = "${aws_iam_policy.eventwatch_ec2_policy.arn}"
 }
+
+resource "aws_iam_role_policy_attachment" "eventwatch_ec2_shutdown_logs_policy_attachment" {
+  role       = "${aws_iam_role.ec2_shutdown_role.name}"
+  policy_arn = "${aws_iam_policy.eventwatch_logs_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "eventwatch_ec2_startup_logs_policy_attachment" {
+  role       = "${aws_iam_role.ec2_startup_role.name}"
+  policy_arn = "${aws_iam_policy.eventwatch_logs_policy.arn}"
+}
+
+
 
 # Creates CloudWatch Event Rule - triggers the Lambda function
 
