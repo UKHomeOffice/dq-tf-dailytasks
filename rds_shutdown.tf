@@ -100,7 +100,7 @@ resource "aws_lambda_function" "rds-snapshot-function" {
     handler ="rds_snapshot.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds-shutdown_role.arn}"
-    filename = "${data.archive_file.rds_shutdownzip.output_path}"
+    filename = "${data.archive_file.rds_manual_snapshotszipdownzip.output_path}"
     memory_size = 128
     timeout = "10"
     source_code_hash = "${data.archive_file.rds_manual_snapshotszip.output_base64sha256}"
