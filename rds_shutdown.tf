@@ -35,6 +35,8 @@ data "archive_file" "rds_manual_snapshotszip" {
   output_path = "${local.path_module}/lambda/package/rds_manual_snapshots.zip"
 }
 
+### Lambda Functions
+
 resource "aws_lambda_function" "rds-shutdown-function" {
     function_name = "rds_shutdown-${var.naming_suffix}"
     handler ="rds_shutdown.lambda_handler"
@@ -97,7 +99,7 @@ resource "aws_lambda_function" "ec2-shutdown-function" {
 
 resource "aws_lambda_function" "rds-snapshot-function" {
     function_name = "rds_snapshot-${var.naming_suffix}"
-    handler ="rds_snapshot.lambda_handler"
+    handler ="rds_manual_snapshots.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds-shutdown_role.arn}"
     filename = "${data.archive_file.rds_manual_snapshotszip.output_path}"
@@ -110,7 +112,7 @@ resource "aws_lambda_function" "rds-snapshot-function" {
     }
 }
 
-# IAM role
+### IAM role
 
 resource "aws_iam_role" "rds-shutdown_role" {
     name = "rds-shutdown_role-${var.naming_suffix}"
@@ -210,7 +212,7 @@ EOF
   }
 }
 
-# IAM Policy
+### IAM Policy Documents
 
 data "aws_iam_policy_document" "eventwatch_logs_doc" {
     statement {
@@ -255,6 +257,8 @@ data "aws_iam_policy_document" "eventwatch_ec2_doc" {
   }
 }
 
+### IAM Policies
+
 resource "aws_iam_policy" "eventwatch_logs_policy" {
     name  =  "eventwatch_logs_policy"
     path  = "/"
@@ -272,6 +276,8 @@ resource "aws_iam_policy" "eventwatch_ec2_policy" {
   path   = "/"
   policy = "${data.aws_iam_policy_document.eventwatch_ec2_doc.json}"
 }
+
+### IAM Policy Attachments
 
 resource "aws_iam_role_policy_attachment" "eventwatch_rds_shutdown_logs_policy_attachment" {
     role     =   "${aws_iam_role.rds-shutdown_role.name}"
