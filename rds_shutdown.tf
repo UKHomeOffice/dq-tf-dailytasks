@@ -234,7 +234,10 @@ data "aws_iam_policy_document" "eventwatch_rds_doc" {
         actions = [
             "rds:DescribeDBInstances",
             "rds:StartDBInstances",
-            "rds:StopDBInstances"
+            "rds:StopDBInstances",
+            "rds:CopyDBSnapshot",
+            "rds:CreateDBSnapshot",
+            "rds:DeleteDBSnapshot"
         ]
         resources = [
             "*"
