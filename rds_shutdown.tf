@@ -28,6 +28,12 @@ data "archive_file" "ecshutzip" {
   output_path = "${local.path_module}/lambda/package/ec2-shutdown.zip"
 }
 
+### Archive file - rds_snapshots
+data "archive_file" "rds_manual_snapshotszip" {
+  type   =  "zip"
+  source_file = "${local.path_module}/lambda/code/rds_manual_snapshots.py"
+  output_path = "${local.path_module}/lambda/package/rds_manual_snapshots.zip"
+}
 
 resource "aws_lambda_function" "rds-shutdown-function" {
     function_name = "rds_shutdown-${var.naming_suffix}"
