@@ -97,7 +97,7 @@ resource "aws_lambda_function" "ec2-shutdown-function" {
 
 resource "aws_lambda_function" "rds-snapshot-function" {
     function_name = "rds_snapshot-${var.naming_suffix}"
-    handler ="rds_snapshot.lambda_handler"
+    handler ="rds_manual_snapshots.lambda_handler"
     runtime = "python3.7"
     role = "${aws_iam_role.rds-shutdown_role.arn}"
     filename = "${data.archive_file.rds_manual_snapshotszip.output_path}"
