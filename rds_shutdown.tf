@@ -89,6 +89,21 @@ resource "aws_lambda_function" "ec2-shutdown-function" {
     }
 }
 
+resource "aws_lambda_function" "rds-snapshot-function" {
+    function_name = "rds_snapshot-${var.naming_suffix}"
+    handler ="rds_snapshot.lambda_handler"
+    runtime = "python3.7"
+    role = "${aws_iam_role.rds-shutdown_role.arn}"
+    filename = "${data.archive_file.rds_shutdownzip.output_path}"
+    memory_size = 128
+    timeout = "10"
+    source_code_hash = "${data.archive_file.rds_manual_snapshotszip.output_base64sha256}"
+
+    tags = {
+       Name  =  "rds_snapshot-${local.naming_suffix}"
+    }
+}
+
 # IAM role
 
 resource "aws_iam_role" "rds-shutdown_role" {
@@ -310,6 +325,13 @@ resource "aws_cloudwatch_event_rule" "daily_rds_startup" {
     schedule_expression = "cron(30 6 ? * MON-FRI *)"
 }
 
+resource "aws_cloudwatch_event_rule" "daily_rds_snapshots" {
+    is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "true"}"
+    name                =  "daily_rds_snapshots"
+    description         = "triggers daily RDS snapshots"
+    schedule_expression = "cron(00 6 ? * MON-FRI *)"
+}
+
 resource "aws_cloudwatch_event_rule" "daily_ec2_startup" {
   is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "true"}"
   name                = "daily_ec2_startup"
@@ -350,4 +372,10 @@ resource "aws_cloudwatch_event_target" "ec2shutdown_lambda_target" {
   target_id = "ec2-shutdown-function"
   rule      = "${aws_cloudwatch_event_rule.daily_ec2_shutdown.name}"
   arn       = "${aws_lambda_function.ec2-shutdown-function.arn}"
+}
+
+resource "aws_cloudwatch_event_target" "rds_snapshot_lambda_target" {
+  target_id = "rds-snapshot-function"
+  rule      = "${aws_cloudwatch_event_rule.daily_rds_snapshots.name}"
+  arn       = "${aws_lambda_function.rds-snapshot-function.arn}"
 }
