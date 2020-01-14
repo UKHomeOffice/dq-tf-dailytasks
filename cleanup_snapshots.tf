@@ -20,7 +20,7 @@ resource "aws_lambda_function" "cleanup_snapshots" {
   }
 
   tags = {
-    Name = "lambda-snapshot-${local.naming_suffix}"
+    Name = "cleanup-snapshots-${local.naming_suffix}"
   }
 }
 
@@ -44,7 +44,7 @@ resource "aws_iam_role" "cleanup_snapshots" {
 EOF
 
   tags = {
-    Name = "lambda-cleanup-snapshots-${local.naming_suffix}"
+    Name = "cleanup-snapshots-${local.naming_suffix}"
   }
 
 }
