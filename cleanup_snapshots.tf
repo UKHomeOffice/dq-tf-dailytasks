@@ -1,7 +1,7 @@
 data "archive_file" "cleanup_snapshots_zip" {
   type        = "zip"
-  source_dir  = "${local.path_module}/lambda/cleanup_snapshots/code"
-  output_path = "${local.path_module}/lambda/cleanup_snapshots/package/lambda.zip"
+  source_file = "${local.path_module}/lambda/code/cleanup_snapshots.py"
+  output_path = "${local.path_module}/lambda/package/cleanup_snapshots.zip"
 }
 
 resource "aws_lambda_function" "cleanup_snapshots" {
