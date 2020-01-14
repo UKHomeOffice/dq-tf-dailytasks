@@ -4,7 +4,7 @@ resource "aws_cloudwatch_event_target" "cleanup_snapshots" {
 
   input = <<DOC
   {
-
+  "res": "Encrypted"
   }
 DOC
 }
@@ -12,5 +12,5 @@ DOC
 resource "aws_cloudwatch_event_rule" "cleanup_snapshots" {
   name                = "cleanup_unencrypted_snapshots"
   description         = "Delete unencrypted snapshots for EC2 Instances"
-  schedule_expression = "cron(0 0 * * ? *)"
+  schedule_expression = "cron(0 09 * * ? *)"
 }

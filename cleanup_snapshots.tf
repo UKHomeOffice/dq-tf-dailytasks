@@ -20,7 +20,7 @@ resource "aws_lambda_function" "cleanup_snapshots" {
   }
 
   tags = {
-    Name = "cleanup-snapshots-${local.naming_suffix}"
+    Name = "cleanup-ec2-snapshots-${local.naming_suffix}"
   }
 }
 
@@ -44,13 +44,13 @@ resource "aws_iam_role" "cleanup_snapshots" {
 EOF
 
   tags = {
-    Name = "cleanup-snapshots-${local.naming_suffix}"
+    Name = "cleanup-ec2-snapshots-${local.naming_suffix}"
   }
 
 }
 
 resource "aws_iam_policy" "cleanup_snapshots" {
-  name        = "${var.pipeline_name}-lambda-cleanup-snapshots"
+  name        = "${var.pipeline_name}-cleanup-ec2-snapshots"
   path        = "/"
   description = "IAM policy for describing snapshots"
 
@@ -86,12 +86,12 @@ resource "aws_cloudwatch_log_group" "lambda_cleanup_snapshots" {
   retention_in_days = 14
 
   tags = {
-    Name = "lambda-cleanup-snapshots-${local.naming_suffix}"
+    Name = "cleanup-ec2-snapshots-${local.naming_suffix}"
   }
 }
 
 resource "aws_iam_policy" "lambda_cleanup_snapshots_logging" {
-  name        = "${var.pipeline_name}-lambda-cleanup-snapshots-logging"
+  name        = "${var.pipeline_name}-cleanup-ec2-snapshots-logging"
   path        = "/"
   description = "IAM policy for logging from a lambda"
 
