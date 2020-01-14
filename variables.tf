@@ -16,7 +16,7 @@ variable "naming_suffix" {
 }
 
 variable "pipeline_name" {
-  default = "aws-maintenance"
+  default = "daily-tasks"
 }
 
 variable "pipeline_count" {
