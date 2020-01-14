@@ -56,10 +56,9 @@ class TestE2E(unittest.TestCase):
 
     def test_name_suffix_aws_lambda_function_cleanup_snapshots_tags(self):
           self.assertEqual(self.result['dailytasks']["aws_lambda_function.cleanup_snapshots"]["tags.Name"], "cleanup-ec2-snapshots-notprod-dq")
-    #
-    # def test_name_suffix_aws_iam_role_cleanup_snapshots_role_tags(self):
-    #       self.assertEqual(self.result['dailytasks']["aws_iam_role.cleanup_snapshots"]["tags.Name"], "cleanup-snapshots-notprod-dq")
-    #
+
+    def test_name_suffix_aws_iam_role_cleanup_snapshots_role_tags(self):
+          self.assertEqual(self.result['dailytasks']["aws_iam_role.cleanup_snapshots"]["tags.Name"], "cleanup-ec2-snapshots-notprod-dq")
 
 if __name__ == '__main__':
     unittest.main()
