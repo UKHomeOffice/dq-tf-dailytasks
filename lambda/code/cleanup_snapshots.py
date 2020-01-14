@@ -9,7 +9,9 @@ import sys
 import logging
 import boto3
 import botocore
+import urllib.request
 from botocore.config import Config
+from botocore.exceptions import ClientError
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
@@ -21,6 +23,53 @@ CONFIG = Config(
         max_attempts=20
     )
 )
+
+def send_message_to_slack(text):
+    """
+    Formats the text provides and posts to a specific Slack web app's URL
+
+    Args:
+        text : the message to be displayed on the Slack channel
+
+    Returns:
+        Slack API repsonse
+    """
+
+
+    try:
+        post = {"text": "{0}".format(text)}
+
+        ssm_param_name = 'slack_notification_webhook'
+        ssm = boto3.client('ssm', config=CONFIG)
+        try:
+            response = ssm.get_parameter(Name=ssm_param_name, WithDecryption=True)
+        except ClientError as err:
+            if err.response['Error']['Code'] == 'ParameterNotFound':
+                LOGGER.info('Slack SSM parameter %s not found. No notification sent', ssm_param_name)
+                return
+            else:
+                LOGGER.error("Unexpected error when attempting to get Slack webhook URL: %s", err)
+                return
+        if 'Value' in response['Parameter']:
+            url = response['Parameter']['Value']
+
+            json_data = json.dumps(post)
+            req = urllib.request.Request(
+                url,
+                data=json_data.encode('ascii'),
+                headers={'Content-Type': 'application/json'})
+            LOGGER.info('Sending notification to Slack')
+            response = urllib.request.urlopen(req)
+
+        else:
+            LOGGER.info('Value for Slack SSM parameter %s not found. No notification sent', ssm_param_name)
+            return
+
+    except Exception as err:
+        LOGGER.error(
+            'The following error has occurred on line: %s',
+            sys.exc_info()[2].tb_lineno)
+        LOGGER.error(str(err))
 
 def lambda_handler(event , context):
     # Setup client
