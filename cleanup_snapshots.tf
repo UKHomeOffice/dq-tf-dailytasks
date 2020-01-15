@@ -27,7 +27,7 @@ resource "aws_iam_role" "cleanup_snapshots" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": "sts:AssumeRole",
+      "Action": "ec2:AssumeRole",
       "Principal": {
         "Service": "lambda.amazonaws.com"
       },
