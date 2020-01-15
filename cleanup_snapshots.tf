@@ -27,7 +27,7 @@ resource "aws_iam_role" "cleanup_snapshots" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": "sts:AssumeRole",
+      "Action": "ec2:AssumeRole",
       "Principal": {
         "Service": "lambda.amazonaws.com"
       },
@@ -62,9 +62,7 @@ resource "aws_iam_policy" "cleanup_snapshots" {
                 "ec2:ModifySnapshotAttribute",
                 "ec2:DescribeSnapshots"
             ],
-            "Resource": [
-              "${aws_lambda_function.cleanup_snapshots.arn}"
-            ]
+            "Resource": "*"
         }
     ]
 }
