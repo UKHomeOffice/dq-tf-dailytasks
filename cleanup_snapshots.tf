@@ -5,7 +5,7 @@ data "archive_file" "cleanup_snapshots_zip" {
 }
 
 resource "aws_lambda_function" "cleanup_snapshots" {
-  filename         = "${path.module}/lambda/cleanup_snapshots/package/lambda.zip"
+  filename         = "${path.module}/lambda/package/cleanup_snapshots.zip"
   function_name    = "${var.pipeline_name}-${var.namespace}-cleanup-snapshots"
   role             = "${aws_iam_role.cleanup_snapshots.arn}"
   handler          = "cleanup_snapshots.lambda_handler"
