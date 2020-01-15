@@ -14,11 +14,6 @@ resource "aws_lambda_function" "cleanup_snapshots" {
   timeout          = "900"
   memory_size      = "128"
 
-  vpc_config {
-    subnet_ids         = ["${var.lambda_subnet}", "${var.lambda_subnet_az2}"]
-    security_group_ids = ["${var.lambda_sgrp}"]
-  }
-
   tags = {
     Name = "cleanup-ec2-snapshots-${local.naming_suffix}"
   }
