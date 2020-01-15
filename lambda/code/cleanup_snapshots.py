@@ -117,7 +117,7 @@ def lambda_handler(event, context):
 
     # Iterate over the list of snapshots and store ones that are unencrypted
     for res in snapshot_list:
-        if res['Encrypted'] != 'Encrypted':
+        if res['Encrypted'] == False:
             print(res['SnapshotId'])
             list_unencrypted.append(res)
         else:

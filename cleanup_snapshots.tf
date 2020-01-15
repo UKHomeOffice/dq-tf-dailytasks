@@ -62,9 +62,7 @@ resource "aws_iam_policy" "cleanup_snapshots" {
                 "ec2:ModifySnapshotAttribute",
                 "ec2:DescribeSnapshots"
             ],
-            "Resource": [
-              "${aws_lambda_function.cleanup_snapshots.arn}"
-            ]
+            "Resource": "*"
         }
     ]
 }
