@@ -327,14 +327,14 @@ resource "aws_iam_role_policy_attachment" "eventwatch_ec2_startup_logs_policy_at
 # Creates CloudWatch Event Rule - triggers the Lambda function
 
 resource "aws_cloudwatch_event_rule" "daily_rds-shutdown" {
-  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "false"}"
+  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "true"}"
   name                = "daily_rds-shutdown"
   description         = "triggers daily RDS shutdown"
   schedule_expression = "cron(0 18 ? * MON-FRI *)"
 }
 
 resource "aws_cloudwatch_event_rule" "daily_rds_startup" {
-  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "false"}"
+  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "true"}"
   name                = "daily_rds_startup"
   description         = "triggers daily RDS startup"
   schedule_expression = "cron(30 6 ? * MON-FRI *)"
@@ -348,14 +348,14 @@ resource "aws_cloudwatch_event_rule" "daily_rds_snapshots" {
 }
 
 resource "aws_cloudwatch_event_rule" "daily_ec2_startup" {
-  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "false"}"
+  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "true"}"
   name                = "daily_ec2_startup"
   description         = "triggers daily ec2 startup"
   schedule_expression = "cron(0 7 ? * MON-FRI *)"
 }
 
 resource "aws_cloudwatch_event_rule" "daily_ec2_shutdown" {
-  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "false"}"
+  is_enabled          = "${var.naming_suffix == "apps-prod-dq" ? "false" : "true"}"
   name                = "daily_ec2_shutdown"
   description         = "triggers daily ec2 shutdown"
   schedule_expression = "cron(0 18 ? * MON-FRI *)"
