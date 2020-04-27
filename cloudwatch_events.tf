@@ -16,8 +16,9 @@ resource "aws_cloudwatch_event_rule" "cleanup_snapshots" {
 }
 
 resource "aws_cloudwatch_event_target" "rds_shutdown" {
-  rule = "${aws_cloudwatch_event_rule.rds_shutdown.name}"
-  arn  = "${aws_lambda_function.rds_shutdown.arn}"
+  count = "${var.environment == "prod" ? "0" : "1"}"
+  rule  = "${aws_cloudwatch_event_rule.rds_shutdown.name}"
+  arn   = "${aws_lambda_function.rds_shutdown.arn}"
 
   input = <<DOC
   {
@@ -27,14 +28,16 @@ DOC
 }
 
 resource "aws_cloudwatch_event_rule" "rds_shutdown" {
+  count               = "${var.environment == "prod" ? "0" : "1"}"
   name                = "daily_rds_shutdown"
   description         = "Shutdown RDS Instances in notprod evenings and weekend"
   schedule_expression = "cron(0 18 ? * MON-FRI *)"
 }
 
 resource "aws_cloudwatch_event_target" "rds_startup" {
-  rule = "${aws_cloudwatch_event_rule.rds_startup.name}"
-  arn  = "${aws_lambda_function.rds_startup.arn}"
+  count = "${var.environment == "prod" ? "0" : "1"}"
+  rule  = "${aws_cloudwatch_event_rule.rds_startup.name}"
+  arn   = "${aws_lambda_function.rds_startup.arn}"
 
   input = <<DOC
   {
@@ -44,14 +47,16 @@ DOC
 }
 
 resource "aws_cloudwatch_event_rule" "rds_startup" {
+  count               = "${var.environment == "prod" ? "0" : "1"}"
   name                = "daily_rds_startup"
   description         = "Startup RDS Instances in notprod mornings weekday"
   schedule_expression = "cron(00 6 ? * MON-FRI *)"
 }
 
 resource "aws_cloudwatch_event_target" "ec2_shutdown" {
-  rule = "${aws_cloudwatch_event_rule.ec2_shutdown.name}"
-  arn  = "${aws_lambda_function.ec2_shutdown.arn}"
+  count = "${var.environment == "prod" ? "0" : "1"}"
+  rule  = "${aws_cloudwatch_event_rule.ec2_shutdown.name}"
+  arn   = "${aws_lambda_function.ec2_shutdown.arn}"
 
   input = <<DOC
   {
@@ -61,14 +66,16 @@ DOC
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_shutdown" {
+  count               = "${var.environment == "prod" ? "0" : "1"}"
   name                = "daily_ec2_shutdown"
   description         = "Shutdown EC2 Instances in notprod evenings and weekends"
   schedule_expression = "cron(0 18 ? * MON-FRI *)"
 }
 
 resource "aws_cloudwatch_event_target" "ec2_startup" {
-  rule = "${aws_cloudwatch_event_rule.ec2_startup.name}"
-  arn  = "${aws_lambda_function.ec2_startup.arn}"
+  count = "${var.environment == "prod" ? "0" : "1"}"
+  rule  = "${aws_cloudwatch_event_rule.ec2_startup.name}"
+  arn   = "${aws_lambda_function.ec2_startup.arn}"
 
   input = <<DOC
   {
@@ -78,6 +85,7 @@ DOC
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_startup" {
+  count               = "${var.environment == "prod" ? "0" : "1"}"
   name                = "daily_ec2_startup"
   description         = "Startup EC2 Instances in notprod mornings weekday"
   schedule_expression = "cron(00 6 ? * MON-FRI *)"
