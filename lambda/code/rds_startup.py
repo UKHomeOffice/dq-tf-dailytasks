@@ -23,16 +23,16 @@ def lambda_handler(event, context):
 
     print('RDS Instannces stopping...')
 
-    shutdown1=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceOne)
-    shutdown2=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceTwo)
-    shutdown3=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceThree)
-    shutdown4=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFour)
-    shutdown5=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFive)
-    shutdown6=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSix)
-    shutdown7=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSeven)
-    shutdown8=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceEight)
-    shutdown9=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceNine)
+    startup1=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceOne)
+    startup2=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceTwo)
+    startup3=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceThree)
+    startup4=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFour)
+    startup5=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFive)
+    startup6=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSix)
+    startup7=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSeven)
+    startup8=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceEight)
+    startup9=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceNine)
 
 
 
-    print('RDS Instances Stopped')
+    print('RDS Instances Started')
