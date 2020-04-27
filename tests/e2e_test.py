@@ -30,29 +30,29 @@ class TestE2E(unittest.TestCase):
     def test_root_destroy(self):
         self.assertEqual(self.result["destroy"], False)
 
-    def test_name_suffix_aws_lambda_function_rdsshutdown_tags(self):
-        self.assertEqual(self.result['dailytasks']["aws_lambda_function.rds-shutdown-function"]["tags.Name"], "rds_shutdown-notprod-dq")
+    def test_name_suffix_aws_lambda_function_rds_shutdown_tags(self):
+          self.assertEqual(self.result['dailytasks']["aws_lambda_function.rds_shutdown"]["tags.Name"], "rds-shutdown-notprod-dq")
 
     def test_name_suffix_aws_iam_role_rds_shutdown_role_tags(self):
-          self.assertEqual(self.result['dailytasks']["aws_iam_role.rds-shutdown_role"]["tags.Name"], "rds-shutdown_role-notprod-dq")
+          self.assertEqual(self.result['dailytasks']["aws_iam_role.rds_shutdown"]["tags.Name"], "rds-shutdown-notprod-dq")
 
-    def test_name_suffix_aws_lambda_function_rdsstartup_tags(self):
-          self.assertEqual(self.result['dailytasks']["aws_lambda_function.rds_startup-function"]["tags.Name"], "rds_daily_startup-notprod-dq")
+    def test_name_suffix_aws_lambda_function_rds_startup_tags(self):
+            self.assertEqual(self.result['dailytasks']["aws_lambda_function.rds_startup"]["tags.Name"], "rds-startup-notprod-dq")
 
     def test_name_suffix_aws_iam_role_rds_startup_role_tags(self):
-          self.assertEqual(self.result['dailytasks']["aws_iam_role.rds_startup_role"]["tags.Name"], "rds_startup_role-notprod-dq")
+            self.assertEqual(self.result['dailytasks']["aws_iam_role.rds_startup"]["tags.Name"], "rds-startup-notprod-dq")
 
-    def test_name_suffix_aws_lambda_function_ec2startup_tags(self):
-        self.assertEqual(self.result['dailytasks']["aws_lambda_function.ec2-startup-function"]["tags.Name"], "ec2_daily_startup-notprod-dq")
+    def test_name_suffix_aws_lambda_function_ec2_startup_tags(self):
+            self.assertEqual(self.result['dailytasks']["aws_lambda_function.ec2_startup"]["tags.Name"], "ec2-startup-notprod-dq")
 
-    def test_name_suffix_aws_iam_role_ec2_startup_role_tags(self):
-          self.assertEqual(self.result['dailytasks']["aws_iam_role.ec2_startup_role"]["tags.Name"], "ec2_startup_role-notprod-dq")
-
-    def test_name_suffix_aws_lambda_function_ec2shutdown_tags(self):
-          self.assertEqual(self.result['dailytasks']["aws_lambda_function.ec2-shutdown-function"]["tags.Name"], "ec2_daily_shutdown-notprod-dq")
+    def test_name_suffix_aws_lambda_function_ec2_shutdown_tags(self):
+            self.assertEqual(self.result['dailytasks']["aws_lambda_function.ec2_shutdown"]["tags.Name"], "ec2-shutdown-notprod-dq")
 
     def test_name_suffix_aws_iam_role_ec2_shutdown_role_tags(self):
-          self.assertEqual(self.result['dailytasks']["aws_iam_role.ec2_shutdown_role"]["tags.Name"], "ec2_shutdown_role-notprod-dq")
+            self.assertEqual(self.result['dailytasks']["aws_iam_role.ec2_shutdown"]["tags.Name"], "ec2-shutdown-notprod-dq")
+
+    def test_name_suffix_aws_iam_role_ec2_startup_role_tags(self):
+            self.assertEqual(self.result['dailytasks']["aws_iam_role.ec2_startup"]["tags.Name"], "ec2-startup-notprod-dq")
 
     def test_name_suffix_aws_lambda_function_cleanup_snapshots_tags(self):
           self.assertEqual(self.result['dailytasks']["aws_lambda_function.cleanup_snapshots"]["tags.Name"], "cleanup-ec2-snapshots-notprod-dq")
