@@ -5,7 +5,7 @@ data "archive_file" "ec2_shutdown_zip" {
 }
 
 resource "aws_lambda_function" "ec2_shutdown" {
-  count            = "${var.environment == "prod" ? "0" : "1"}"
+  count            = "${var.namespace == "prod" ? "0" : "1"}"
   filename         = "${path.module}/lambda/package/ec2_shutdown.zip"
   function_name    = "${var.pipeline_name}-${var.namespace}-ec2-shutdown"
   role             = "${aws_iam_role.ec2_shutdown.arn}"
@@ -21,7 +21,7 @@ resource "aws_lambda_function" "ec2_shutdown" {
 }
 
 resource "aws_iam_role" "ec2_shutdown" {
-  count = "${var.environment == "prod" ? "0" : "1"}"
+  count = "${var.namespace == "prod" ? "0" : "1"}"
   name  = "${var.pipeline_name}-${var.namespace}-ec2-shutdown"
 
   assume_role_policy = <<EOF
@@ -47,7 +47,7 @@ EOF
 }
 
 resource "aws_iam_policy" "ec2_shutdown" {
-  count       = "${var.environment == "prod" ? "0" : "1"}"
+  count       = "${var.namespace == "prod" ? "0" : "1"}"
   name        = "${var.pipeline_name}-ec2-shutdown"
   path        = "/"
   description = "IAM policy for describing snapshots"
@@ -71,13 +71,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_shutdown" {
-  count      = "${var.environment == "prod" ? "0" : "1"}"
+  count      = "${var.namespace == "prod" ? "0" : "1"}"
   role       = "${aws_iam_role.ec2_shutdown.name}"
   policy_arn = "${aws_iam_policy.ec2_shutdown.arn}"
 }
 
 resource "aws_cloudwatch_log_group" "lambda_ec2_shutdown" {
-  count             = "${var.environment == "prod" ? "0" : "1"}"
+  count             = "${var.namespace == "prod" ? "0" : "1"}"
   name              = "/aws/lambda/${aws_lambda_function.ec2_shutdown.function_name}"
   retention_in_days = 14
 
@@ -87,7 +87,7 @@ resource "aws_cloudwatch_log_group" "lambda_ec2_shutdown" {
 }
 
 resource "aws_iam_policy" "lambda_ec2_shutdown_logging" {
-  count       = "${var.environment == "prod" ? "0" : "1"}"
+  count       = "${var.namespace == "prod" ? "0" : "1"}"
   name        = "${var.pipeline_name}-ec2-shutdown-logging"
   path        = "/"
   description = "IAM policy for logging from a lambda"
@@ -113,7 +113,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_ec2_shutdown_logs" {
-  count      = "${var.environment == "prod" ? "0" : "1"}"
+  count      = "${var.namespace == "prod" ? "0" : "1"}"
   role       = "${aws_iam_role.ec2_shutdown.name}"
   policy_arn = "${aws_iam_policy.lambda_ec2_shutdown_logging.arn}"
 }
