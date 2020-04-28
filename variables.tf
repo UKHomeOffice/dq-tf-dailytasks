@@ -3,11 +3,6 @@ locals {
   path_module   = "${var.path_module != "unset" ? var.path_module : path.module}"
 }
 
-variable "environment" {
-  default     = "notprod"
-  description = "Switch between environments"
-}
-
 variable "path_module" {
   default = "unset"
 }
