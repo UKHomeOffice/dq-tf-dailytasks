@@ -98,6 +98,9 @@ resource "aws_iam_policy" "lambda_rds_startup_logging" {
   "Statement": [
     {
       "Action": [
+        "cloudwatch:GetMetricStatistics",
+        "logs:DescribeLogStreams",
+        "logs:GetLogEvents",
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
