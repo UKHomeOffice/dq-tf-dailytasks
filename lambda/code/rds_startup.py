@@ -21,17 +21,17 @@ def lambda_handler(event, context):
     instanceNine='wip-postgres-tableau-apps-notprod-dq'
 
 
-    print('RDS Instannces stopping...')
+    print('RDS Instannces starting...')
 
-    startup1=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceOne)
-    startup2=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceTwo)
-    startup3=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceThree)
-    startup4=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFour)
-    startup5=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceFive)
-    startup6=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSix)
-    startup7=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceSeven)
-    startup8=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceEight)
-    startup9=rds_inst.stop_db_instance(DBInstanceIdentifier=instanceNine)
+    startup1=rds_inst.start_db_instance(DBInstanceIdentifier=instanceOne)
+    startup2=rds_inst.start_db_instance(DBInstanceIdentifier=instanceTwo)
+    startup3=rds_inst.start_db_instance(DBInstanceIdentifier=instanceThree)
+    startup4=rds_inst.start_db_instance(DBInstanceIdentifier=instanceFour)
+    startup5=rds_inst.start_db_instance(DBInstanceIdentifier=instanceFive)
+    startup6=rds_inst.start_db_instance(DBInstanceIdentifier=instanceSix)
+    startup7=rds_inst.start_db_instance(DBInstanceIdentifier=instanceSeven)
+    startup8=rds_inst.start_db_instance(DBInstanceIdentifier=instanceEight)
+    startup9=rds_inst.start_db_instance(DBInstanceIdentifier=instanceNine)
 
 
 
