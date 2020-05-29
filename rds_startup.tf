@@ -5,12 +5,12 @@ data "archive_file" "rds_startup_zip" {
 }
 
 resource "aws_lambda_function" "rds_startup" {
-  count            = "${var.namespace == "prod" ? "0" : "1"}"
+  count            = var.namespace == "prod" ? "0" : "1"
   filename         = "${path.module}/lambda/package/rds_startup.zip"
   function_name    = "${var.pipeline_name}-${var.namespace}-rds-startup"
-  role             = "${aws_iam_role.rds_startup.arn}"
+  role             = aws_iam_role.rds_startup[0].arn
   handler          = "rds_startup.lambda_handler"
-  source_code_hash = "${data.archive_file.rds_startup_zip.output_base64sha256}"
+  source_code_hash = data.archive_file.rds_startup_zip.output_base64sha256
   runtime          = "python3.7"
   timeout          = "900"
   memory_size      = "128"
@@ -18,10 +18,18 @@ resource "aws_lambda_function" "rds_startup" {
   tags = {
     Name = "rds-startup-${local.naming_suffix}"
   }
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified,
+      source_code_hash,
+    ]
+  }
 }
 
 resource "aws_iam_role" "rds_startup" {
-  count = "${var.namespace == "prod" ? "0" : "1"}"
+  count = var.namespace == "prod" ? "0" : "1"
   name  = "${var.pipeline_name}-${var.namespace}-rds-startup"
 
   assume_role_policy = <<EOF
@@ -40,14 +48,14 @@ resource "aws_iam_role" "rds_startup" {
 }
 EOF
 
+
   tags = {
     Name = "rds-startup-${local.naming_suffix}"
   }
-
 }
 
 resource "aws_iam_policy" "rds_startup" {
-  count       = "${var.namespace == "prod" ? "0" : "1"}"
+  count       = var.namespace == "prod" ? "0" : "1"
   name        = "${var.pipeline_name}-rds-startup"
   path        = "/"
   description = "IAM policy for describing snapshots"
@@ -68,17 +76,18 @@ resource "aws_iam_policy" "rds_startup" {
     ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "rds_startup" {
-  count      = "${var.namespace == "prod" ? "0" : "1"}"
-  role       = "${aws_iam_role.rds_startup.name}"
-  policy_arn = "${aws_iam_policy.rds_startup.arn}"
+  count      = var.namespace == "prod" ? "0" : "1"
+  role       = aws_iam_role.rds_startup[0].name
+  policy_arn = aws_iam_policy.rds_startup[0].arn
 }
 
 resource "aws_cloudwatch_log_group" "lambda_rds_startup" {
-  count             = "${var.namespace == "prod" ? "0" : "1"}"
-  name              = "/aws/lambda/${aws_lambda_function.rds_startup.function_name}"
+  count             = var.namespace == "prod" ? "0" : "1"
+  name              = "/aws/lambda/${aws_lambda_function.rds_startup[0].function_name}"
   retention_in_days = 14
 
   tags = {
@@ -87,7 +96,7 @@ resource "aws_cloudwatch_log_group" "lambda_rds_startup" {
 }
 
 resource "aws_iam_policy" "lambda_rds_startup_logging" {
-  count       = "${var.namespace == "prod" ? "0" : "1"}"
+  count       = var.namespace == "prod" ? "0" : "1"
   name        = "${var.pipeline_name}-rds-startup-logging"
   path        = "/"
   description = "IAM policy for logging from a lambda"
@@ -105,18 +114,19 @@ resource "aws_iam_policy" "lambda_rds_startup_logging" {
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "${aws_cloudwatch_log_group.lambda_rds_startup.arn}",
-        "${aws_cloudwatch_log_group.lambda_rds_startup.arn}/*"
+        "${aws_cloudwatch_log_group.lambda_rds_startup[0].arn}",
+        "${aws_cloudwatch_log_group.lambda_rds_startup[0].arn}/*"
       ],
       "Effect": "Allow"
     }
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_rds_startup_logs" {
-  count      = "${var.namespace == "prod" ? "0" : "1"}"
-  role       = "${aws_iam_role.rds_startup.name}"
-  policy_arn = "${aws_iam_policy.lambda_rds_startup_logging.arn}"
+  count      = var.namespace == "prod" ? "0" : "1"
+  role       = aws_iam_role.rds_startup[0].name
+  policy_arn = aws_iam_policy.lambda_rds_startup_logging[0].arn
 }
