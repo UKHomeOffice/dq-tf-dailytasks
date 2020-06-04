@@ -7,15 +7,23 @@ data "archive_file" "cleanup_snapshots_zip" {
 resource "aws_lambda_function" "cleanup_snapshots" {
   filename         = "${path.module}/lambda/package/cleanup_snapshots.zip"
   function_name    = "${var.pipeline_name}-${var.namespace}-cleanup-snapshots"
-  role             = "${aws_iam_role.cleanup_snapshots.arn}"
+  role             = aws_iam_role.cleanup_snapshots.arn
   handler          = "cleanup_snapshots.lambda_handler"
-  source_code_hash = "${data.archive_file.cleanup_snapshots_zip.output_base64sha256}"
+  source_code_hash = data.archive_file.cleanup_snapshots_zip.output_base64sha256
   runtime          = "python3.7"
   timeout          = "900"
   memory_size      = "128"
 
   tags = {
     Name = "cleanup-ec2-snapshots-${local.naming_suffix}"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified,
+      source_code_hash,
+    ]
   }
 }
 
@@ -38,10 +46,10 @@ resource "aws_iam_role" "cleanup_snapshots" {
 }
 EOF
 
+
   tags = {
     Name = "cleanup-ec2-snapshots-${local.naming_suffix}"
   }
-
 }
 
 resource "aws_iam_policy" "cleanup_snapshots" {
@@ -67,11 +75,12 @@ resource "aws_iam_policy" "cleanup_snapshots" {
     ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "cleanup_snapshots" {
-  role       = "${aws_iam_role.cleanup_snapshots.name}"
-  policy_arn = "${aws_iam_policy.cleanup_snapshots.arn}"
+  role       = aws_iam_role.cleanup_snapshots.name
+  policy_arn = aws_iam_policy.cleanup_snapshots.arn
 }
 
 resource "aws_cloudwatch_log_group" "lambda_cleanup_snapshots" {
@@ -106,9 +115,10 @@ resource "aws_iam_policy" "lambda_cleanup_snapshots_logging" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_cleanup_snapshots_logs" {
-  role       = "${aws_iam_role.cleanup_snapshots.name}"
-  policy_arn = "${aws_iam_policy.lambda_cleanup_snapshots_logging.arn}"
+  role       = aws_iam_role.cleanup_snapshots.name
+  policy_arn = aws_iam_policy.lambda_cleanup_snapshots_logging.arn
 }
