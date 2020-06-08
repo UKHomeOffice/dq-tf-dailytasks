@@ -23,7 +23,16 @@ resource "aws_cloudwatch_event_target" "rds_shutdown" {
 
   input = <<DOC
   {
-  "DBInstanceStatus": "available"
+    "instances": [
+      "dev-postgres-internal-tableau-apps-notprod-dq",
+      "fms-postgres-fms-apps-notprod-dq",
+      "mds-postgres-dataingest-apps-notprod-dq",
+      "postgres-datafeeds-apps-notprod-dq",
+      "postgres-internal-tableau-apps-notprod-dq",
+      "qa-postgres-internal-tableau-apps-notprod-dq",
+      "stg-postgres-internal-tableau-apps-notprod-dq"
+    ],
+    "action": "stop"
   }
 DOC
 
@@ -44,7 +53,16 @@ resource "aws_cloudwatch_event_target" "rds_startup" {
 
   input = <<DOC
   {
-  "DBInstanceStatus": "stopped"
+    "instances": [
+      "dev-postgres-internal-tableau-apps-notprod-dq",
+      "fms-postgres-fms-apps-notprod-dq",
+      "mds-postgres-dataingest-apps-notprod-dq",
+      "postgres-datafeeds-apps-notprod-dq",
+      "postgres-internal-tableau-apps-notprod-dq",
+      "qa-postgres-internal-tableau-apps-notprod-dq",
+      "stg-postgres-internal-tableau-apps-notprod-dq"
+    ],
+    "action": "start"
   }
 DOC
 
@@ -99,4 +117,3 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = "true"
 }
-
