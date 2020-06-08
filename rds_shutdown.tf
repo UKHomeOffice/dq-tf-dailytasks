@@ -68,8 +68,8 @@ resource "aws_iam_policy" "rds_shutdown" {
             "Sid": "",
             "Effect": "Allow",
             "Action": [
-                "rds:Describe*",
-                "rds:Stop*"
+              "rds:Describe*",
+              "rds:Stop*"
             ],
             "Resource": "*"
         }
