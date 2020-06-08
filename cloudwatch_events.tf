@@ -24,13 +24,6 @@ resource "aws_cloudwatch_event_target" "rds_shutdown" {
   input = <<DOC
   {
     "instances": [
-      "dev-postgres-internal-tableau-apps-notprod-dq",
-      "fms-postgres-fms-apps-notprod-dq",
-      "mds-postgres-dataingest-apps-notprod-dq",
-      "postgres-datafeeds-apps-notprod-dq",
-      "postgres-internal-tableau-apps-notprod-dq",
-      "qa-postgres-internal-tableau-apps-notprod-dq",
-      "stg-postgres-internal-tableau-apps-notprod-dq"
     ],
     "action": "stop"
   }
@@ -54,13 +47,6 @@ resource "aws_cloudwatch_event_target" "rds_startup" {
   input = <<DOC
   {
     "instances": [
-      "dev-postgres-internal-tableau-apps-notprod-dq",
-      "fms-postgres-fms-apps-notprod-dq",
-      "mds-postgres-dataingest-apps-notprod-dq",
-      "postgres-datafeeds-apps-notprod-dq",
-      "postgres-internal-tableau-apps-notprod-dq",
-      "qa-postgres-internal-tableau-apps-notprod-dq",
-      "stg-postgres-internal-tableau-apps-notprod-dq"
     ],
     "action": "start"
   }
