@@ -68,8 +68,8 @@ resource "aws_iam_policy" "rds_startup" {
             "Sid": "",
             "Effect": "Allow",
             "Action": [
-                "rds:DescribeDBInstance",
-                "rds:StartDBInstance"
+              "rds:Describe*",
+              "rds:Start*"
             ],
             "Resource": "*"
         }

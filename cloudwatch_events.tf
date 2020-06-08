@@ -23,7 +23,9 @@ resource "aws_cloudwatch_event_target" "rds_shutdown" {
 
   input = <<DOC
   {
-  "DBInstanceStatus": "available"
+    "instances": [
+    ],
+    "action": "stop"
   }
 DOC
 
@@ -44,7 +46,9 @@ resource "aws_cloudwatch_event_target" "rds_startup" {
 
   input = <<DOC
   {
-  "DBInstanceStatus": "stopped"
+    "instances": [
+    ],
+    "action": "start"
   }
 DOC
 
@@ -99,4 +103,3 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = "true"
 }
-
