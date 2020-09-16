@@ -3,7 +3,7 @@ import boto3
 # Defines current active region
 
 active_region = 'eu-west-2'
-inst_to_exclude=[]
+inst_to_exclude = set([])
 
 def lambda_handler(event, context):
 
@@ -13,20 +13,19 @@ def lambda_handler(event, context):
     for instance in notprod_instances.instances.filter(
     	Filters =[{'Name':'tag:Name',
     			'Values': ['*stag*']}]):
-    	inst_to_exclude.append(instance)
+        inst_to_exclude.append(instance)
 
     for instance in notprod_instances.instances.filter(
     	Filters =[{'Name':'tag:Name',
     			'Values': ['*dev*']}]):
-    	inst_to_exclude.append(instance)
+        inst_to_exclude.append(instance)
 
     for instance in notprod_instances.instances.filter(
     	Filters =[{'Name':'tag:Name',
     			'Values': ['*deployment*']}]):
-    	inst_to_exclude.append(instance)
+        inst_to_exclude.append(instance)
 
     for instance in notprod_instances.instances.all():
-
         print("Instance-ID: ", instance.id)
 
         #Get only stopped instances
