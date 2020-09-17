@@ -1,6 +1,4 @@
 import boto3
-import fnmatch
-
 RDS = boto3.client('rds')
 def lambda_handler(event, context):
 
@@ -22,21 +20,10 @@ def lambda_handler(event, context):
             if instance in rds_instance['DBInstanceIdentifier']:
                 dbs.add(rds_instance['DBInstanceIdentifier'])
 
-# Discard stg, dev, and qa RDS instances from start up
-    dbs_to_stop = dbs.copy()
-    for db in dbs:
-        if fnmatch.fnmatch(db, "stg*"):
-            dbs_to_stop.discard(db)
-        if fnmatch.fnmatch(db, "dev*"):
-            dbs_to_stop.discard(db)
-        if fnmatch.fnmatch(db, "qa*"):
-            dbs_to_stop.discard(db)
-
     # Apply our action
-    for db in dbs_to_stop:
+    for db in dbs:
         try:
             if action == "start":
-
                 response = RDS.start_db_instance(DBInstanceIdentifier=db)
             else:
                 response = RDS.stop_db_instance(DBInstanceIdentifier=db)
