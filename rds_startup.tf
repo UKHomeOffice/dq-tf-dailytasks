@@ -23,7 +23,6 @@ resource "aws_lambda_function" "rds_startup" {
     ignore_changes = [
       filename,
       last_modified,
-      source_code_hash,
     ]
   }
 }
