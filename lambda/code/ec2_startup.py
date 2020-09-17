@@ -3,7 +3,7 @@ import boto3
 # Defines current active region
 
 active_region = 'eu-west-2'
-inst_to_exclude = set([])
+inst_to_exclude = []
 
 def lambda_handler(event, context):
 
