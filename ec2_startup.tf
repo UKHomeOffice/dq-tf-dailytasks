@@ -19,13 +19,13 @@ resource "aws_lambda_function" "ec2_startup" {
     Name = "ec2-startup-${local.naming_suffix}"
   }
 
-  lifecycle {
-    ignore_changes = [
-      filename,
-      last_modified,
-      source_code_hash,
-    ]
-  }
+  #   lifecycle {
+  #     ignore_changes = [
+  #       filename,
+  #       last_modified,
+  #       source_code_hash,
+  #     ]
+  #   }
 }
 
 resource "aws_iam_role" "ec2_startup" {
