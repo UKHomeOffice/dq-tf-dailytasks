@@ -25,6 +25,16 @@ def lambda_handler(event, context):
     			'Values': ['*deployment*']}]):
         inst_to_exclude.append(instance)
 
+    for instance in notprod_instances.instances.filter(
+    	Filters =[{'Name':'tag:Name',
+    			'Values': ['mock-ftp-server-centos']}]):
+        inst_to_exclude.append(instance)
+
+    for instance in notprod_instances.instances.filter(
+    	Filters =[{'Name':'tag:Name',
+    			'Values': ['FTP-server']}]):
+        inst_to_exclude.append(instance)
+
     for instance in notprod_instances.instances.all():
         print("Instance-ID: ", instance.id)
 
