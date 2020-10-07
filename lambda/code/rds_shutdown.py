@@ -10,7 +10,7 @@ def lambda_handler(event, context):
         return "Exception! Failed with: {0}".format(e)
 
     if (not (action == "stop" or action == "start")):
-        return "instances must be a list of strings, action must be \"start\" or \"stop\""
+        return "Action must be \"start\" or \"stop\""
 
     # Filter through our databases, only get the instances that are featured in our instances list
     dbs = set([])
@@ -28,6 +28,6 @@ def lambda_handler(event, context):
 
             print("{0} status: {1}".format(db, response['DBInstanceStatus']))
         except Exception as e:
-            print('RDS already in a stopped state: '+ (rds_instance['DBInstanceIdentifier']))
+            print('RDS already in a stopped state: '+ db)
 
     return "Completed!"
