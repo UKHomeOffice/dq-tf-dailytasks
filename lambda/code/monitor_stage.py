@@ -6,8 +6,8 @@ import fnmatch
 active_region = 'eu-west-2'
 inst_to_exclude = []
 dbs_running = []
-stage_inst_list = ['*stag*', '*qa*']
-rds_list = ['stag*', 'stg*', 'dev*', 'deployment*', 'qa*']
+stage_inst_list = ['*stag*']
+rds_list = ['stag*', 'stg*']
 
 def send_message_to_slack(text):
     """
@@ -72,9 +72,10 @@ def list_of_stage_ec2(inst):
         inst_to_exclude.append(instance)
 
 def lambda_handler(event, context):
+
     """
     This functions finds out which EC2 and RDS instances
-    with STage or dev in its name that are in 'running'
+    with Stage in its name that are in 'running'
     or 'available' state
 
     this functons sends Slack notification if the above

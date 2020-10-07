@@ -120,7 +120,7 @@ DOC
 resource "aws_cloudwatch_event_rule" "monitor_stage" {
   count               = var.namespace == "prod" ? "1" : "0"
   name                = "daily_monitor_stage"
-  description         = "Startup EC2 Instances in notprod mornings weekday"
+  description         = "Daily Check if staging EC2 and RDS are running"
   schedule_expression = "cron(00 8 ? * MON-FRI *)"
   is_enabled          = "true"
 }
