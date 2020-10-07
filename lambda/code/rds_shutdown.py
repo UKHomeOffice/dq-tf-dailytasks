@@ -9,16 +9,14 @@ def lambda_handler(event, context):
     except Exception as e:
         return "Exception! Failed with: {0}".format(e)
 
-    if (not (action == "stop" or action == "start")) or (not isinstance(instances, list)):
+    if (not (action == "stop" or action == "start")):
         return "instances must be a list of strings, action must be \"start\" or \"stop\""
 
     # Filter through our databases, only get the instances that are featured in our instances list
     dbs = set([])
     rds_instances = RDS.describe_db_instances()
     for rds_instance in rds_instances['DBInstances']:
-        for instance in instances:
-            if instance in rds_instance['DBInstanceIdentifier']:
-                dbs.add(rds_instance['DBInstanceIdentifier'])
+        dbs.add(rds_instance['DBInstanceIdentifier'])
 
     # Apply our action
     for db in dbs:
