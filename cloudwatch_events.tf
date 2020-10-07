@@ -103,3 +103,24 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = "true"
 }
+
+resource "aws_cloudwatch_event_target" "monitor_stage" {
+  count = var.namespace == "prod" ? "1" : "0"
+  rule  = aws_cloudwatch_event_rule.monitor_stage[0].name
+  arn   = aws_lambda_function.monitor_stage[0].arn
+
+  input = <<DOC
+  {
+    "Name" : "stopped"
+  }
+DOC
+
+}
+
+resource "aws_cloudwatch_event_rule" "monitor_stage" {
+  count               = var.namespace == "prod" ? "1" : "0"
+  name                = "daily_monitor_stage"
+  description         = "Startup EC2 Instances in notprod mornings weekday"
+  schedule_expression = "cron(00 8 ? * MON-FRI *)"
+  is_enabled          = "true"
+}
