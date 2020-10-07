@@ -19,13 +19,13 @@ resource "aws_lambda_function" "rds_shutdown" {
     Name = "rds-shutdown-${local.naming_suffix}"
   }
 
-  lifecycle {
-    ignore_changes = [
-      filename,
-      last_modified,
-      source_code_hash,
-    ]
-  }
+  # lifecycle {
+  #   ignore_changes = [
+  #     filename,
+  #     last_modified,
+  #     source_code_hash,
+  #   ]
+  # }
 }
 
 resource "aws_iam_role" "rds_shutdown" {
