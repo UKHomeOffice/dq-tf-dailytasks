@@ -69,7 +69,7 @@ resource "aws_iam_policy" "monitor_stage" {
             "Effect": "Allow",
             "Action": [
                 "ec2:DescribeInstances",
-                "ec2:StartInstances"
+                "rds:Describe*"
             ],
             "Resource": "*"
         }
@@ -107,6 +107,9 @@ resource "aws_iam_policy" "lambda_monitor_stage_logging" {
   "Statement": [
     {
       "Action": [
+        "cloudwatch:GetMetricStatistics",
+        "logs:DescribeLogStreams",
+        "logs:GetLogEvents",
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
