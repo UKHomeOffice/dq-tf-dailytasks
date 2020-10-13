@@ -124,3 +124,11 @@ resource "aws_cloudwatch_event_rule" "monitor_stage" {
   schedule_expression = "cron(00 8 ? * MON-FRI *)"
   is_enabled          = "true"
 }
+
+resource "aws_lambda_permission" "allow_monitor_stage_to_run_by_cw_rule" {
+  count         = var.namespace == "prod" ? "1" : "0"
+  action        = "lambda:InvokeFunction"
+  function_name = "${var.pipeline_name}-${var.namespace}-monitor-stage"
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.monitor_stage[0].arn
+}

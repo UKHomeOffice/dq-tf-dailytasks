@@ -1,5 +1,9 @@
 import boto3
 import fnmatch
+import logging
+import sys
+from botocore.config import Config
+from botocore.exceptions import ClientError
 
 # Defines current active region
 
@@ -8,6 +12,23 @@ inst_to_exclude = []
 dbs_running = []
 stage_inst_list = ['*stag*']
 rds_list = ['stag*', 'stg*']
+
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
+LOG_GROUP_NAME = None
+LOG_STREAM_NAME = None
+
+CONFIG = Config(
+    retries=dict(
+        max_attempts=20
+    )
+)
+
+# Retrieve EC2 Instances
+prod_instances = boto3.resource('ec2', region_name=active_region)
+
+# Retrieve RDS Instances
+RDS = boto3.client('rds')
 
 def send_message_to_slack(text):
     """
@@ -83,9 +104,6 @@ def lambda_handler(event, context):
 
     """
 
-    # Retrieve EC2 Instances
-    prod_instances = boto3.resource('ec2', region_name=active_region)
-
     for i in stage_inst_list:
         list_of_stage_ec2(i)
 
@@ -99,9 +117,6 @@ def lambda_handler(event, context):
                 if 'Name' in tag['Key']:
                     instance_name = tag['Value']
             send_message_to_slack('The EC2 Instance {0} is currently Turned on... '.format(instance))
-
-    # Retrieve RDS Instances
-    RDS = boto3.client('rds')
 
     rds_instances = RDS.describe_db_instances()
     for rds_instance in rds_instances['DBInstances']:
