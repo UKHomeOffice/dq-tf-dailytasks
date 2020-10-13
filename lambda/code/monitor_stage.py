@@ -2,6 +2,8 @@ import boto3
 import fnmatch
 import logging
 import sys
+import json
+import urllib.parse
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
@@ -116,7 +118,7 @@ def lambda_handler(event, context):
             for tag in instance.tags:
                 if 'Name' in tag['Key']:
                     instance_name = tag['Value']
-            send_message_to_slack('The EC2 Instance {0} is currently Turned on... '.format(instance))
+                    send_message_to_slack('The EC2 Instance {0} is currently in a Running State, Please shutdown if not in use... '.format(instance_name))
 
     rds_instances = RDS.describe_db_instances()
     for rds_instance in rds_instances['DBInstances']:
@@ -126,4 +128,4 @@ def lambda_handler(event, context):
     for i in rds_list:
         for j in dbs_running:
             if fnmatch.fnmatch(j, i):
-                send_message_to_slack('The RDS Instance {0} is currently Turned on... '.format(j))
+                send_message_to_slack('The RDS Instance {0} is currently in a Running State, Please shutdown if not in use... '.format(j))
