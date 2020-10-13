@@ -130,3 +130,35 @@ resource "aws_iam_role_policy_attachment" "lambda_monitor_stage_logs" {
   role       = aws_iam_role.monitor_stage[0].name
   policy_arn = aws_iam_policy.lambda_monitor_stage_logging[0].arn
 }
+
+resource "aws_iam_policy" "lambda_monitor_stage_send_slack" {
+  count       = var.namespace == "prod" ? "1" : "0"
+  name        = "${var.pipeline_name}-monitor-stage-slack"
+  path        = "/"
+  description = "IAM policy to allow sending slack alerts"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ssm:GetParameter",
+        "ssm:GetParameters"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:ssm:${var.region}:${var.account_id[var.namespace]}:parameter/slack_notification_webhook"
+      ]
+    }
+  ]
+}
+EOF
+
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_monitor_stage_slack" {
+  count      = var.namespace == "prod" ? "1" : "0"
+  role       = aws_iam_role.monitor_stage[0].name
+  policy_arn = aws_iam_policy.lambda_monitor_stage_send_slack[0].arn
+}
