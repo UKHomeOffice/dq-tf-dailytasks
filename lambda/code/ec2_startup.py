@@ -15,10 +15,11 @@ def lambda_handler(event, context):
     			'Values': ['*stag*']}]):
         inst_to_exclude.append(instance)
 
-    for instance in notprod_instances.instances.filter(
-    	Filters =[{'Name':'tag:Name',
-    			'Values': ['*dev*']}]):
-        inst_to_exclude.append(instance)
+    ## this is commented out to start the Tab Dev box
+    # for instance in notprod_instances.instances.filter(
+    # 	Filters =[{'Name':'tag:Name',
+    # 			'Values': ['*dev*']}]):
+    #     inst_to_exclude.append(instance)
 
     for instance in notprod_instances.instances.filter(
     	Filters =[{'Name':'tag:Name',
