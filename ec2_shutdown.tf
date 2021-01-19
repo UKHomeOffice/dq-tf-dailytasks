@@ -26,7 +26,7 @@ resource "aws_lambda_function" "ec2_shutdown" {
 #       source_code_hash,
 #     ]
 #   }
-# }
+ }
 
 resource "aws_iam_role" "ec2_shutdown" {
   count = var.namespace == "prod" ? "0" : "1"
