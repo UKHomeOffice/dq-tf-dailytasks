@@ -19,14 +19,14 @@ resource "aws_lambda_function" "ec2_shutdown" {
     Name = "ec2-shutdown-${local.naming_suffix}"
   }
 
-  lifecycle {
-    ignore_changes = [
-      filename,
-      last_modified,
-      source_code_hash,
-    ]
-  }
-}
+#   lifecycle {
+#     ignore_changes = [
+#       filename,
+#       last_modified,
+#       source_code_hash,
+#     ]
+#   }
+# }
 
 resource "aws_iam_role" "ec2_shutdown" {
   count = var.namespace == "prod" ? "0" : "1"
