@@ -3,6 +3,7 @@ import boto3
 # Defines current active region
 
 active_region = 'eu-west-2'
+inst_to_exclude = []
 
 
 def lambda_handler(event, context):
@@ -18,7 +19,14 @@ def lambda_handler(event, context):
             Filters=[{'Name': 'instance-state-name',
                       'Values': ['running']}])
 
+        # temp, disable shiutdown of ec2-dev-tableau-ops-notprod-dq?
+        for instance in notprod_instances.instances.filter(
+            Filters =[{'Name':'tag:Name',
+                   'Values': ['ec2-dev-tableau-ops-notprod-dq']}]):
+            inst_to_exclude.append(instance)
+
         # Stop the instances
         for instance in running_instances:
-            instance.stop()
-            print('Stopped instance: ', instance.id)
+            if instance not in inst_to_exclude:
+                instance.stop()
+                print('Stopped instance: ', instance.id)
