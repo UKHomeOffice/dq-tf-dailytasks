@@ -19,26 +19,26 @@ def lambda_handler(event, context):
             Filters=[{'Name': 'instance-state-name',
                       'Values': ['running']}])
 
-        # temp, disable shiutdown of ec2-dev-tableau-ops-notprod-dq?
-        for instance in notprod_instances.instances.filter(
-            Filters =[{'Name':'tag:Name',
-                   'Values': ['ec2-dev-tableau-ops-notprod-dq']}]):
-            inst_to_exclude.append(instance)
-
-        for instance in notprod_instances.instances.filter(
-            Filters =[{'Name':'tag:Name',
-                   'Values': ['bastion-linux-ops-notprod-dq']}]):
-            inst_to_exclude.append(instance)
-
-        for instance in notprod_instances.instances.filter(
-            Filters =[{'Name':'tag:Name',
-                   'Values': ['bastion-win-ops-notprod-dq']}]):
-            inst_to_exclude.append(instance)
-
-        for instance in notprod_instances.instances.filter(
-            Filters =[{'Name':'tag:Name',
-                   'Values': ['ec2-internal-tableau-linux-apps-notprod-dq']}]):
-            inst_to_exclude.append(instance)
+        # # temp, disable shiutdown of ec2-dev-tableau-ops-notprod-dq?
+        # for instance in notprod_instances.instances.filter(
+        #     Filters =[{'Name':'tag:Name',
+        #            'Values': ['ec2-dev-tableau-ops-notprod-dq']}]):
+        #     inst_to_exclude.append(instance)
+        #
+        # for instance in notprod_instances.instances.filter(
+        #     Filters =[{'Name':'tag:Name',
+        #            'Values': ['bastion-linux-ops-notprod-dq']}]):
+        #     inst_to_exclude.append(instance)
+        #
+        # for instance in notprod_instances.instances.filter(
+        #     Filters =[{'Name':'tag:Name',
+        #            'Values': ['bastion-win-ops-notprod-dq']}]):
+        #     inst_to_exclude.append(instance)
+        #
+        # for instance in notprod_instances.instances.filter(
+        #     Filters =[{'Name':'tag:Name',
+        #            'Values': ['ec2-internal-tableau-linux-apps-notprod-dq']}]):
+        #     inst_to_exclude.append(instance)
 
         # Stop the instances
         for instance in running_instances:
