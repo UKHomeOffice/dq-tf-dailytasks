@@ -7,28 +7,51 @@ platform:
   arch: amd64
 
 steps:
-- name: testsuite
+- name: retrieve-dev-secrets
   pull: if-not-exists
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-  commands:
-  - docker run --rm -v $(pwd):/data -w /data hashicorp/terraform fmt --diff --check
+  image: quay.io/ukhomeofficedigital/hashicorp-vault:1.6.0
+  commands: &retieve-secrets-commands
+  - vault read aws_dsa_cdlz/creds/drone > aws_creds.json
+  - export LEASE_ID=$(cat aws_creds.json) | grep lease_id | awk -F ' ' '{print $2}')
+  #Update the token TTL to 10 mins
+  - vault lease renew - increment=600 $${LEASE_ID}
+  #Get the AWS credentials
+  - echo "export AWS_ACEESS_KEY_ID=$(cat aws_creds.json) | grep access_key | awk -F ' ' '{print $2}')" >> set drone_secrets.sh
+  - echo "export AWS_SECRET_ACEESS_KEY=$(cat aws_creds.json) | grep secret_key | awk -F ' ' '{print $2}')" >> set drone_secrets.sh
+  - sleep 10
+  environment:
+    VAULT_ADDR:
+      from_secret: VAULT_ADDR_DEV
+    VAULT_TOKEN:
+      from_secret: VAULT_TOKEN_DEV
+    ENV: dev
   when:
     event:
     - push
 
-- name: run-testrunner-tests
-  pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/tf-testrunner:32
-  commands:
-  - python -m unittest tests/*_test.py
-  environment:
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY
-  when:
-    event:
-    - push
+
+# - name: testsuite
+#   pull: if-not-exists
+#   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+#   commands:
+#   - docker run --rm -v $(pwd):/data -w /data hashicorp/terraform fmt --diff --check
+#   when:
+#     event:
+#     - push
+#
+# - name: run-testrunner-tests
+#   pull: if-not-exists
+#   image: quay.io/ukhomeofficedigital/tf-testrunner:32
+#   commands:
+#   - python -m unittest tests/*_test.py
+#   environment:
+#     AWS_ACCESS_KEY_ID:
+#       from_secret: AWS_ACCESS_KEY_ID
+#     AWS_SECRET_ACCESS_KEY:
+#       from_secret: AWS_SECRET_ACCESS_KEY
+#   when:
+#     event:
+#     - push
 
 services:
   - name: docker
