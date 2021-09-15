@@ -122,7 +122,7 @@ resource "aws_cloudwatch_event_rule" "monitor_stage" {
   name                = "daily_monitor_stage"
   description         = "Daily Check if staging EC2 and RDS are running"
   schedule_expression = "cron(00 8 ? * MON-FRI *)"
-  is_enabled          = "true"
+  is_enabled          = false
 }
 
 resource "aws_lambda_permission" "allow_monitor_stage_to_run_by_cw_rule" {
