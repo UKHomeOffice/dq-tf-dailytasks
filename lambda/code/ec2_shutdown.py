@@ -30,10 +30,15 @@ def lambda_handler(event, context):
         #            'Values': ['bastion-linux-ops-notprod-dq']}]):
         #     inst_to_exclude.append(instance)
         #
-        # for instance in notprod_instances.instances.filter(
-        #     Filters =[{'Name':'tag:Name',
-        #            'Values': ['bastion-win-ops-notprod-dq']}]):
-        #     inst_to_exclude.append(instance)
+        for instance in notprod_instances.instances.filter(
+            Filters =[{'Name':'tag:Name',
+                   'Values': ['ec2-haproxy-peering-notprod-dq']}]):
+            inst_to_exclude.append(instance)
+
+        for instance in notprod_instances.instances.filter(
+            Filters =[{'Name':'tag:Name',
+                   'Values': ['bastion-win-ops-notprod-dq']}]):
+            inst_to_exclude.append(instance)
         #
         # for instance in notprod_instances.instances.filter(
         #     Filters =[{'Name':'tag:Name',
