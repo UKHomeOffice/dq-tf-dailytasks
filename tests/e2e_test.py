@@ -18,9 +18,9 @@ class TestE2E(unittest.TestCase):
 
             module "dailytasks" {
               source = "./mymodule"
-              providers = {aws = "aws"}
+              providers = {aws = aws}
 
-              path_module = "./"
+              # path_module = "./"
               namespace     = "notprod"
               naming_suffix = "notprod-dq"
             }
