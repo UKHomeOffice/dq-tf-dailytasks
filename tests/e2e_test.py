@@ -11,22 +11,18 @@ class TestE2E(unittest.TestCase):
         self.snippet = """
             provider "aws" {
               region = "eu-west-2"
-              profile = "foo"
+             #profile = "foo"
               skip_credentials_validation = true
               skip_get_ec2_platforms = true
             }
-
             module "dailytasks" {
               source = "./mymodule"
-              providers = {aws = aws}
-
+             # providers = {aws = "aws"}
               path_module = "./"
               namespace     = "notprod"
               naming_suffix = "notprod-dq"
             }
         """
-        self.runner = Runner(self.snippet)
-        self.result = self.runner.result
 
     def test_name_suffix_aws_lambda_function_rds_shutdown_tags(self):
           self.assertEqual(self.runner.get_value("module.dailytasks.aws_lambda_function.rds_shutdown[0]", "tags"), {"Name": "rds-shutdown-notprod-dq"})
