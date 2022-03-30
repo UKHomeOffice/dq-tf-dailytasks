@@ -11,14 +11,14 @@ class TestE2E(unittest.TestCase):
         self.snippet = """
             provider "aws" {
               region = "eu-west-2"
-             #profile = "foo"
+              profile = "foo"
               skip_credentials_validation = true
               skip_get_ec2_platforms = true
             }
 
             module "dailytasks" {
               source = "./mymodule"
-             # providers = {aws = "aws"}
+              providers = {aws = "aws"}
 
               path_module = "./"
               namespace     = "notprod"
