@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     			'Values': ['*stag*']}]):
         inst_to_exclude.append(instance)
 
-    # # this is commented out to start the Tab Deploymebnt box
+    # # this is commented out to start the Tab Deployment box
     # for instance in notprod_instances.instances.filter(
     # 	Filters =[{'Name':'tag:Name',
     # 			'Values': ['*deployment*']}]):
