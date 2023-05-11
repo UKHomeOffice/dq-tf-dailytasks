@@ -1,6 +1,6 @@
 ---
 global-variables:
-  vault-image: &vault-image docker.digital.homeoffice.gov.uk/dq/dq-vault-awscli:1.43
+  vault-image: &vault-image docker.digital.homeoffice.gov.uk/dq/dq-vault-awscli:1.43 
 
 kind: pipeline
 name: default
@@ -25,9 +25,10 @@ x-anchors:
 
 steps:
 - name: testsuite
-  pull: if-not-exists
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  pull: always
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
   commands:
+  - /usr/local/bin/wait 30
   - docker run --rm -v $(pwd):/data -w /data hashicorp/terraform fmt --diff --check
   when:
     event:
@@ -40,9 +41,9 @@ steps:
     *retrieve-deployment-aws-key
   environment:
     VAULT_ADDR:
-      from_secret: VAULT_ADDR_DEV
+      from_secret: VAULT_ADDR_NOTPROD
     VAULT_TOKEN:
-      from_secret: VAULT_TOKEN_DEV
+      from_secret: VAULT_TOKEN_NOTPROD
   when:
     event:
       - push
@@ -80,4 +81,4 @@ steps:
 
 services:
   - name: docker
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
