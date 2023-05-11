@@ -1,6 +1,6 @@
 ---
 global-variables:
-  vault-image: &vault-image docker.digital.homeoffice.gov.uk/dq/dq-vault-awscli:1.43
+  vault-image: &vault-image docker.digital.homeoffice.gov.uk/dq/dq-vault-awscli:1.43 
 
 kind: pipeline
 name: default
@@ -11,7 +11,6 @@ platform:
 
 x-anchors:
   retrieve-deployment-aws-key: &retrieve-deployment-aws-key
-    - /usr/local/bin/wait 30
     # Retrive vault secrets
     - vault read aws_dacc_dq/creds/drone > aws_creds.json
     - export LEASE_ID=$(cat aws_creds.json | grep lease_id | awk -F ' ' '{print $2}')
@@ -36,7 +35,7 @@ steps:
     - push
 
 - name: retrieve_aws_secrets_test
-  pull: if-not-exists
+  pull: always
   image: *vault-image
   commands:
     *retrieve-deployment-aws-key
