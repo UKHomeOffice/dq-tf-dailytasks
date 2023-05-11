@@ -35,7 +35,7 @@ steps:
     - push
 
 - name: retrieve_aws_secrets_test
-  pull: always
+  pull: if-not-exists
   image: *vault-image
   commands:
     *retrieve-deployment-aws-key
