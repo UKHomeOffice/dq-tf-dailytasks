@@ -72,7 +72,15 @@ resource "aws_iam_policy" "ec2_startup" {
                 "ec2:StartInstances"
             ],
             "Resource": "*"
-        }
+        },
+        {
+            "Sid": "AllowS3GetObject",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": "arn:aws:s3:::s3-dq-httpd-config-bucket-notprod/ssl.conf"
+      }
     ]
 }
 EOF
