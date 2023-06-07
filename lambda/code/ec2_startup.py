@@ -19,7 +19,6 @@ def get_ssl_config_file_contents():
         s3_response = s3_object.get()
         s3_object_body = s3_response.get('Body')
         content = s3_object_body.read().decode("utf-8")
-        content_list = content.split("\n")
 
     except s3.meta.client.exceptions.NoSuchBucket as err:
         print('No such bucket')
@@ -46,19 +45,21 @@ def get_ssl_config_file_contents():
         return
 
     else:
-        return content_list
+        ssl_lines = content.split("\n")
 
     finally:
-        return
+        return ssl_lines
 
 
 def get_inactive_notprod_instance_ip(ssl_lines):
-    """Extract ip address from ssl config file"""
+    """Extract ip address from contents of ssl config file"""
     if ssl_lines is None:
         return
 
+    # Regex to extract one of the two notprod ip addresses
+    # Whichever one is on a commented line is the 'inactive' one
     proxy_regex = re.compile(
-        r"^\s*[^#]\s*ProxyPassReverse\s*/\s*http://(?P<inactive_ip>10\.1\.12\.11[12])/\s*$"
+        r"^\s*#\s*ProxyPassReverse\s*/\s*http://(?P<inactive_ip>10\.1\.12\.11[12])/\s*$"
     )
 
     for line in ssl_lines:
