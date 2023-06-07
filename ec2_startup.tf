@@ -80,7 +80,16 @@ resource "aws_iam_policy" "ec2_startup" {
                 "s3:GetObject"
             ],
             "Resource": "arn:aws:s3:::s3-dq-httpd-config-bucket-notprod/ssl.conf"
-      }
+        },
+        {
+            "Sid": "AllowKMSDecryption",
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Effect": "Allow",
+            "Resource": "${var.kms_key_s3}"
+        }
     ]
 }
 EOF
