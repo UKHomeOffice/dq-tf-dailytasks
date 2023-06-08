@@ -84,7 +84,7 @@ def lambda_handler(event, context):
                 Filters=[{'Name': 'tag:Name',
                           'Values': ['ec2-internal-tableau-linux-apps-notprod-dq']},
                          {'Name': 'private-ip-address',
-                          'Values': inactive_notprod_instance_ip}]):
+                          'Values': [inactive_notprod_instance_ip]}]):
             inst_to_exclude.append(instance)
 
     for instance in notprod_instances.instances.filter(
