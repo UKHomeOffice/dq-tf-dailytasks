@@ -52,21 +52,33 @@ def get_ssl_config_file_contents():
 
 
 def get_inactive_notprod_instance_ip(ssl_lines):
-    """Extract ip address from contents of ssl config file"""
+    """
+    Extract active ip address from contents of ssl config file
+    Return the 'other' ip address for the inactive instance
+    """
     if ssl_lines is None:
         return
 
+    ip1 = "10.1.12.111"
+    ip2 = "10.1.12.112"
+
     # Regex to extract one of the two notprod ip addresses
-    # Whichever one is on a commented line is the 'inactive' one
+    # Whichever one is on a non-commented line is the 'active' one
     proxy_regex = re.compile(
-        r"^\s*#\s*ProxyPassReverse\s*/\s*http://(?P<inactive_ip>10\.1\.12\.11[12])/\s*$"
+        r"^\s*[^#]\s*ProxyPassReverse\s*/\s*http://(?P<active_ip>10\.1\.12\.11[12])/\s*$"
     )
 
+    # Match active ip and return the 'other' one
     for line in ssl_lines:
         proxy_match = re.search(proxy_regex, line)
         if proxy_match:
-            inactive_notprod_instance_ip = proxy_match.group("inactive_ip")
-            return inactive_notprod_instance_ip
+            active_notprod_instance_ip = proxy_match.group("active_ip")
+            if active_notprod_instance_ip == ip1:
+                return ip2
+            elif active_notprod_instance_ip == ip2:
+                return ip1
+            else:
+                return
 
     return
 
