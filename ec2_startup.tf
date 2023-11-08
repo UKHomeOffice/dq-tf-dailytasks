@@ -69,7 +69,7 @@ resource "aws_iam_policy" "ec2_startup" {
   description = "IAM policy for describing snapshots"
 
   policy = <<EOF
-{
+  {
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -102,7 +102,7 @@ resource "aws_iam_policy" "ec2_startup" {
 }
 EOF
 
-depends_on = [aws_kms_key.dt_password_keys]
+  depends_on = [aws_kms_key.dt_password_keys]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
