@@ -1,4 +1,4 @@
-data "aws_caller_identity" "current" { 
+data "aws_caller_identity" "current" {
 }
 
 resource "aws_kms_key" "dt_bucket_key" {
