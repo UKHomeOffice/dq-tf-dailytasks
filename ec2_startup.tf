@@ -4,12 +4,6 @@ data "archive_file" "ec2_startup_zip" {
   output_path = "${local.path_module}/lambda/package/ec2_startup.zip"
 }
 
-resource "aws_kms_key" "dt_passwords_key" {
-  count                   = var.namespace == "prod" ? "0" : "1"
-  description             = "This key is used to encrypt Haproxy config bucket objects"
-  deletion_window_in_days = 30
-  enable_key_rotation     = true
-}
 
 resource "aws_lambda_function" "ec2_startup" {
   count            = var.namespace == "prod" ? "0" : "1"
