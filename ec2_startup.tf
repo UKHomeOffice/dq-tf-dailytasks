@@ -28,8 +28,7 @@ resource "aws_lambda_function" "ec2_startup" {
   #   }
 }
 
-data "aws_caller_identity" "current" {
-}
+
 
 resource "aws_iam_role" "ec2_startup" {
   count = var.namespace == "prod" ? "0" : "1"
@@ -57,31 +56,12 @@ EOF
 }
 
 resource "aws_kms_key" "dt_passwords_key" {
-  description             = "KMS key used in dq-tf-dailytasks"
+  count = var.namespace == "prod" ? "0" : "1"
+  description             = "This key is used to encrypt Haproxy config bucket objects"
   deletion_window_in_days = 30
   enable_key_rotation     = true
-
-  policy = <<EOF
-  {
-  "Version": "2012-10-17",
-  "Id": "df-default-1",
-  "Statement": [
-    {
-      "Sid": "Enable IAM User Permissions",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-        ]
-      },
-      "Action": "kms:*",
-      "Resource": "*"
-    }
-  ]
 }
-EOF
 
-}
 
 resource "aws_iam_policy" "ec2_startup" {
   count       = var.namespace == "prod" ? "0" : "1"
