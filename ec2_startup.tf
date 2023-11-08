@@ -35,26 +35,25 @@ resource "aws_iam_role" "ec2_startup" {
   count = var.namespace == "prod" ? "0" : "1"
   name  = "${var.pipeline_name}-${var.namespace}-ec2-startup"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-
-
   tags = {
     Name = "ec2-startup-${local.naming_suffix}"
   }
+
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "sts:AssumeRole",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Effect": "Allow",
+        "Sid": ""
+      }
+    ]
+  }
+EOF
 }
 
 resource "aws_kms_key" "dt_passwords_key" {
@@ -118,7 +117,7 @@ resource "aws_iam_policy" "ec2_startup" {
                 "kms:GenerateDataKey"
             ],
             "Effect": "Allow",
-            "Resource": aws_kms_key.dt_password_keys.key_id
+            "Resource": ["${aws_kms_key.dt_password_keys.arn}"]
         }
     ]
 }
