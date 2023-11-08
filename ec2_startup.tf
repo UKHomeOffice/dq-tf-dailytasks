@@ -96,13 +96,13 @@ resource "aws_iam_policy" "ec2_startup" {
                 "kms:GenerateDataKey"
             ],
             "Effect": "Allow",
-            "Resource": ["${aws_kms_key.dt_password_keys.arn}"]
+            "Resource": ["${aws_kms_key.dt_bucket_key.arn}"]
         }
     ]
 }
 EOF
 
-  depends_on = [aws_kms_key.dt_password_keys]
+  depends_on = [aws_kms_key.dt_bucket_key]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
