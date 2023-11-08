@@ -22,19 +22,6 @@ resource "aws_kms_key" "dt_bucket_key" {
             },
             "Action": "kms:*",
             "Resource": "*"
-        },
-        {
-            "Sid": "Allow services use of the key",
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "s3.amazonaws.com"
-            },
-            "Action": [
-                "kms:Encrypt",
-                "kms:GenerateDataKey*",
-                "kms:DescribeKey"
-            ],
-            "Resource": "*"
         }
     ]
 }
