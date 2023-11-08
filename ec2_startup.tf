@@ -102,6 +102,7 @@ resource "aws_iam_policy" "ec2_startup" {
 }
 EOF
 
+depends_on = [aws_kms_key.dt_password_keys]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
