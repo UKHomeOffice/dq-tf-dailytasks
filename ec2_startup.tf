@@ -28,6 +28,9 @@ resource "aws_lambda_function" "ec2_startup" {
   #   }
 }
 
+data "aws_caller_identity" "current" {
+}
+
 resource "aws_iam_role" "ec2_startup" {
   count = var.namespace == "prod" ? "0" : "1"
   name  = "${var.pipeline_name}-${var.namespace}-ec2-startup"
@@ -52,6 +55,33 @@ EOF
   tags = {
     Name = "ec2-startup-${local.naming_suffix}"
   }
+}
+
+resource "aws_kms_key" "dt_passwords_key" {
+  description             = "KMS key used in dq-tf-dailytasks"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  policy = <<EOF
+  {
+  "Version": "2012-10-17",
+  "Id": "df-default-1",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        ]
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
 }
 
 resource "aws_iam_policy" "ec2_startup" {
@@ -88,7 +118,7 @@ resource "aws_iam_policy" "ec2_startup" {
                 "kms:GenerateDataKey"
             ],
             "Effect": "Allow",
-            "Resource": "${var.kms_key_s3}"
+            "Resource": aws_kms_key.dt_password_keys.key_id
         }
     ]
 }
