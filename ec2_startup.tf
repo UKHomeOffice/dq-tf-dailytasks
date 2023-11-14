@@ -4,6 +4,7 @@ data "archive_file" "ec2_startup_zip" {
   output_path = "${local.path_module}/lambda/package/ec2_startup.zip"
 }
 
+
 resource "aws_lambda_function" "ec2_startup" {
   count            = var.namespace == "prod" ? "0" : "1"
   filename         = "${path.module}/lambda/package/ec2_startup.zip"
@@ -28,30 +29,31 @@ resource "aws_lambda_function" "ec2_startup" {
   #   }
 }
 
+
+
 resource "aws_iam_role" "ec2_startup" {
   count = var.namespace == "prod" ? "0" : "1"
   name  = "${var.pipeline_name}-${var.namespace}-ec2-startup"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-
-
   tags = {
     Name = "ec2-startup-${local.naming_suffix}"
   }
+
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "sts:AssumeRole",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Effect": "Allow",
+        "Sid": ""
+      }
+    ]
+  }
+EOF
 }
 
 resource "aws_iam_policy" "ec2_startup" {
@@ -61,7 +63,7 @@ resource "aws_iam_policy" "ec2_startup" {
   description = "IAM policy for describing snapshots"
 
   policy = <<EOF
-{
+  {
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -88,12 +90,13 @@ resource "aws_iam_policy" "ec2_startup" {
                 "kms:GenerateDataKey"
             ],
             "Effect": "Allow",
-            "Resource": "${var.kms_key_s3}"
+            "Resource": ["${aws_kms_key.dt_bucket_key.arn}"]
         }
     ]
 }
 EOF
 
+  depends_on = [aws_kms_key.dt_bucket_key]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {

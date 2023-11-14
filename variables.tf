@@ -23,11 +23,6 @@ variable "pipeline_name" {
   default = "daily-tasks"
 }
 
-variable "kms_key_s3" {
-  description = "The ARN of the KMS key that is used to encrypt HTTPD config bucket objects"
-  default     = "arn:aws:kms:eu-west-2:483846886818:key/c3884750-ad4e-4654-a63b-f5009dbc2c59"
-}
-
 variable "pipeline_count" {
   default = 1
 }
