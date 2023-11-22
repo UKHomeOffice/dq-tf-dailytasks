@@ -114,11 +114,11 @@ resource "aws_iam_policy" "ec2_startup" {
         },
         {
             "Sid": "AllowKMSDecryption",
+            "Effect": "Allow", 
             "Action": [
                 "kms:Decrypt",
                 "kms:GenerateDataKey"
             ],
-            "Effect": "Allow",
             "Resource": "*"
         }
     ]
