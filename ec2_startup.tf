@@ -5,6 +5,35 @@ data "archive_file" "ec2_startup_zip" {
 }
 
 
+resource "aws_kms_key" "dt_bucket_key" {
+  count                   = var.namespace == "prod" ? "0" : "1"
+  description             = "This key is used to encrypt daily tasks buckets"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+
+  policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Id": "daily-tasks-1",
+    "Statement": [
+        {
+            "Sid": "Enable IAM User Permissions",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                  "${data.aws_caller_identity.current.arn}",
+                  "${data.aws_caller_identity.current.account_id}"
+                ]
+            },
+            "Action": "kms:*",
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+}
+
 resource "aws_lambda_function" "ec2_startup" {
   count            = var.namespace == "prod" ? "0" : "1"
   filename         = "${path.module}/lambda/package/ec2_startup.zip"
@@ -90,13 +119,11 @@ resource "aws_iam_policy" "ec2_startup" {
                 "kms:GenerateDataKey"
             ],
             "Effect": "Allow",
-            "Resource": ["${aws_kms_key.dt_bucket_key.arn}"]
+            "Resource": ["${aws_kms_key.dt_bucket_key[0].arn}"]
         }
     ]
 }
-EOF
-
-  depends_on = [aws_kms_key.dt_bucket_key]
+EOF  
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
