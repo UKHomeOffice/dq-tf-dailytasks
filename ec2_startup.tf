@@ -119,7 +119,7 @@ resource "aws_iam_policy" "ec2_startup" {
                 "kms:Decrypt",
                 "kms:GenerateDataKey"
             ],
-            "Resource": "*"
+            "Resource": "${aws_kms_key.dt_bucket_key[0].arn}"
         }
     ]
 }
