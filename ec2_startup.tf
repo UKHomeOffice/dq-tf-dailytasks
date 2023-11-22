@@ -92,7 +92,7 @@ resource "aws_iam_policy" "ec2_startup" {
   description = "IAM policy for describing snapshots"
 
   policy = <<EOF
-  {
+{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -113,6 +113,7 @@ resource "aws_iam_policy" "ec2_startup" {
             "Resource": "arn:aws:s3:::s3-dq-httpd-config-bucket-notprod/ssl.conf"
         },
         {
+            "Sid": "",
             "Effect": "Allow", 
             "Action": [
                 "kms:*"                
@@ -122,6 +123,8 @@ resource "aws_iam_policy" "ec2_startup" {
     ]
 }
 EOF  
+
+depends_on = [aws_kms_key.dt_bucket_key]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
