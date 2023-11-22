@@ -113,7 +113,6 @@ resource "aws_iam_policy" "ec2_startup" {
             "Resource": "arn:aws:s3:::s3-dq-httpd-config-bucket-notprod/ssl.conf"
         },
         {
-            "Sid": "AllowKMSDecryption",
             "Effect": "Allow", 
             "Action": [
                 "kms:*"                
