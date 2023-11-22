@@ -6,7 +6,7 @@ data "archive_file" "ec2_startup_zip" {
 
 
 resource "aws_kms_key" "dt_bucket_key" {
-  count            = var.namespace == "prod" ? "0" : "1"
+  count                   = var.namespace == "prod" ? "0" : "1"
   description             = "This key is used to encrypt daily tasks buckets"
   deletion_window_in_days = 7
   enable_key_rotation     = true
