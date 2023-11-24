@@ -118,7 +118,7 @@ resource "aws_iam_policy" "ec2_startup" {
             "Action": [
                 "kms:*"                
             ],
-            "Resource": "${aws_kms_key.dt_bucket_key[0].arn}"
+            "Resource": "*"
         }
     ]
 }
