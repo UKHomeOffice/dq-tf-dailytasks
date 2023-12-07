@@ -83,6 +83,14 @@ def get_inactive_notprod_instance_ip(ssl_lines):
     return
 
 
+def get_instance_name(instance):
+    filtered_tags = [
+        d.get("Value") for d in instance.tags if d.get("Key") == "Name"
+    ]
+    instance_name = filtered_tags[0]
+    return instance_name
+
+
 def lambda_handler(event, context):
     # Retrieve EC2 Instances
     notprod_instances = boto3.resource('ec2', region_name=active_region)
@@ -120,16 +128,22 @@ def lambda_handler(event, context):
                       'Values': ['FTP-server']}]):
         inst_to_exclude.append(instance)
 
+    for instance in notprod_instances.instances.filter(
+            Filters=[{'Name': 'tag:Name',
+                      'Values': ['ec2-ext-tableau-linux-apps-notprod-dq']}]):
+        inst_to_exclude.append(instance)
+
+    # Get only stopped instances
+    stopped_instances = notprod_instances.instances.filter(
+        Filters=[{'Name': 'instance-state-name',
+                  'Values': ['stopped']}])
+
+    # Iterate over all instances
     for instance in notprod_instances.instances.all():
-        print("Instance-ID: ", instance.id)
-
-        # Get only stopped instances
-        stopped_instances = notprod_instances.instances.filter(
-            Filters=[{'Name': 'instance-state-name',
-                      'Values': ['stopped']}])
-
-        # Start the instances
-        for instance in stopped_instances:
-            if instance not in inst_to_exclude:
-                instance.start()
-                print('Started instance: ', instance.id)
+        instance_name = get_instance_name(instance)
+        print(f"Instance: {instance.id}  |  Name: {instance_name}")
+        # Check if it's stopped and not in the exclusion list
+        if instance in stopped_instances and instance not in inst_to_exclude:
+            # Start the instance
+            instance.start()
+            print(f"Started : {instance.id}  |  Name: {instance_name}")
