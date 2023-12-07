@@ -138,5 +138,3 @@ def lambda_handler(event, context):
             # Start the instance
             instance.start()
             print('Started instance: ', instance.id)
-
-
