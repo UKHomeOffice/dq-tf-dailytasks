@@ -125,16 +125,18 @@ def lambda_handler(event, context):
                       'Values': ['ec2-ext-tableau-linux-apps-notprod-dq']}]):
         inst_to_exclude.append(instance)
 
+    # Get only stopped instances
+    stopped_instances = notprod_instances.instances.filter(
+        Filters=[{'Name': 'instance-state-name',
+                  'Values': ['stopped']}])
+
+    # Iterate over all instances
     for instance in notprod_instances.instances.all():
         print("Instance-ID: ", instance.id)
+        # Check if it's stopped and not in the exclusion list
+        if instance in stopped_instances and instance not in inst_to_exclude:
+            # Start the instance
+            instance.start()
+            print('Started instance: ', instance.id)
 
-        # Get only stopped instances
-        stopped_instances = notprod_instances.instances.filter(
-            Filters=[{'Name': 'instance-state-name',
-                      'Values': ['stopped']}])
 
-        # Start the instances
-        for instance in stopped_instances:
-            if instance not in inst_to_exclude:
-                instance.start()
-                print('Started instance: ', instance.id)
