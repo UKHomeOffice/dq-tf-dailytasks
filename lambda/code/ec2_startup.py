@@ -120,6 +120,11 @@ def lambda_handler(event, context):
                       'Values': ['FTP-server']}]):
         inst_to_exclude.append(instance)
 
+    for instance in notprod_instances.instances.filter(
+            Filters=[{'Name': 'tag:Name',
+                      'Values': ['ec2-ext-tableau-linux-apps-notprod-dq']}]):
+        inst_to_exclude.append(instance)
+
     for instance in notprod_instances.instances.all():
         print("Instance-ID: ", instance.id)
 
