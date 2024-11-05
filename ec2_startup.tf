@@ -68,7 +68,7 @@ resource "aws_iam_role" "ec2_startup" {
     Name = "ec2-startup-${local.naming_suffix}"
   }
 
-  policy = <<EOF
+  assume_role_policy = <<EOF
   {
     "Version": "2012-10-17",
     "Statement": [
