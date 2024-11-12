@@ -56,6 +56,15 @@ steps:
     event:
       - push
 
+- name: run-testrunner-tests
+  pull: if-not-exists
+  image: *testrunner-image
+  commands:
+  - terraform version
+  when:
+    event:
+      - push
+
 - name: retrieve_aws_secrets
   pull: if-not-exists
   image: *vault-image
