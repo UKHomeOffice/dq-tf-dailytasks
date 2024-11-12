@@ -56,7 +56,7 @@ steps:
     event:
       - push
 
-- name: run-testrunner-tests
+- name: tf-version-check
   pull: if-not-exists
   image: *testrunner-image
   commands:
