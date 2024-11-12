@@ -77,6 +77,14 @@ steps:
     event:
       - push
 
+- name: terraform-version
+  pull: if-not-exists
+  image: *testrunner-image
+  commands: terraform version
+  when:
+    event:
+      - push
+
 - name: renew-vault-tokens
   pull: if-not-exists
   image: *vault-image
