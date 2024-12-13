@@ -16,7 +16,7 @@ resource "aws_lambda_function" "rule_disable" {
   memory_size      = "128"
   environment {
     variables = {
-      RULE_NAMES = "daily_ec2_shutdown,daily_ec2_startup,daily_rds_shutdown,daily_rds_shutdown"
+      RULE_NAMES = "daily_ec2_shutdown,daily_ec2_startup,daily_rds_shutdown,daily_rds_startup"
     }
   }
 
