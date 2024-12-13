@@ -112,13 +112,13 @@ resource "aws_cloudwatch_log_group" "lambda_rule_enable" {
   retention_in_days = 14
 
   tags = {
-    Name = "rds-startup-${local.naming_suffix}"
+    Name = "rule-enable-${local.naming_suffix}"
   }
 }
 
 resource "aws_iam_policy" "lambda_rule_enable_logging" {
   count       = var.namespace == "prod" ? "0" : "1"
-  name        = "${var.pipeline_name}-rds-startup-logging"
+  name        = "${var.pipeline_name}-rule-enable-logging"
   path        = "/"
   description = "IAM policy for logging from a lambda"
 
