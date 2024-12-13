@@ -105,3 +105,49 @@ resource "aws_cloudwatch_event_rule" "rule_disable" {
   schedule_expression = "cron(0 18 20 12 ? 2024)"
   is_enabled          = "true"
 }
+
+resource "aws_cloudwatch_log_group" "lambda_rule_disable" {
+  count             = var.namespace == "prod" ? "0" : "1"
+  name              = "/aws/lambda/${aws_lambda_function.rule_disable[0].function_name}"
+  retention_in_days = 14
+
+  tags = {
+    Name = "rule-disable-${local.naming_suffix}"
+  }
+}
+
+resource "aws_iam_policy" "lambda_rule_disable_logging" {
+  count       = var.namespace == "prod" ? "0" : "1"
+  name        = "${var.pipeline_name}-rule-disable-logging"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "cloudwatch:GetMetricStatistics",
+        "logs:DescribeLogStreams",
+        "logs:GetLogEvents",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "${aws_cloudwatch_log_group.lambda_rule_disable[0].arn}",
+        "${aws_cloudwatch_log_group.lambda_rule_disable[0].arn}/*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_rule_disable_logs" {
+  count      = var.namespace == "prod" ? "0" : "1"
+  role       = aws_iam_role.rule_disable[0].name
+  policy_arn = aws_iam_policy.lambda_rule_disable_logging[0].arn
+}
