@@ -105,3 +105,49 @@ resource "aws_cloudwatch_event_rule" "rule_enable" {
   schedule_expression = "cron(0 18 1 1 ? 2025)"
   is_enabled          = "true"
 }
+
+resource "aws_cloudwatch_log_group" "lambda_rule_enable" {
+  count             = var.namespace == "prod" ? "0" : "1"
+  name              = "/aws/lambda/${aws_lambda_function.rule_enable[0].function_name}"
+  retention_in_days = 14
+
+  tags = {
+    Name = "rds-startup-${local.naming_suffix}"
+  }
+}
+
+resource "aws_iam_policy" "lambda_rule_enable_logging" {
+  count       = var.namespace == "prod" ? "0" : "1"
+  name        = "${var.pipeline_name}-rds-startup-logging"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "cloudwatch:GetMetricStatistics",
+        "logs:DescribeLogStreams",
+        "logs:GetLogEvents",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "${aws_cloudwatch_log_group.lambda_rule_enable[0].arn}",
+        "${aws_cloudwatch_log_group.lambda_rule_enable[0].arn}/*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_rule_enable_logs" {
+  count      = var.namespace == "prod" ? "0" : "1"
+  role       = aws_iam_role.rule_enable[0].name
+  policy_arn = aws_iam_policy.lambda_rule_enable_logging[0].arn
+}
