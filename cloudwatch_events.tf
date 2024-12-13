@@ -35,7 +35,7 @@ resource "aws_cloudwatch_event_rule" "rds_shutdown" {
   count               = var.namespace == "prod" ? "0" : "1"
   name                = "daily_rds_shutdown"
   description         = "Shutdown RDS Instances in notprod evenings and weekend"
-  schedule_expression = "cron(0 17 ? * MON-FRI *)"
+  schedule_expression = "cron(0 18 ? * MON-FRI *)"
   is_enabled          = "true"
 }
 
@@ -79,7 +79,7 @@ resource "aws_cloudwatch_event_rule" "ec2_shutdown" {
   count               = var.namespace == "prod" ? "0" : "1"
   name                = "daily_ec2_shutdown"
   description         = "Shutdown EC2 Instances in notprod evenings and weekends"
-  schedule_expression = "cron(0 17 ? * MON-FRI *)"
+  schedule_expression = "cron(0 18 ? * MON-FRI *)"
   is_enabled          = "true"
 }
 
