@@ -58,7 +58,7 @@ resource "aws_cloudwatch_event_rule" "rds_startup" {
   count               = var.namespace == "prod" ? "0" : "1"
   name                = "daily_rds_startup"
   description         = "Startup RDS Instances in notprod mornings weekday"
-  schedule_expression = "cron(00 9 ? * MON-FRI *)"
+  schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = "true"
 }
 
@@ -100,7 +100,7 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   count               = var.namespace == "prod" ? "0" : "1"
   name                = "daily_ec2_startup"
   description         = "Startup EC2 Instances in notprod mornings weekday"
-  schedule_expression = "cron(00 9 ? * MON-FRI *)"
+  schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = "true"
 }
 
