@@ -13,7 +13,7 @@ DOC
 resource "aws_cloudwatch_event_rule" "cleanup_snapshots" {
   name                = "cleanup_unencrypted_snapshots"
   description         = "Delete unencrypted snapshots for EC2 Instances"
-  schedule_expression = "cron(0 09 * * ? *)"
+  schedule_expression = "cron(0 6 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "rds_shutdown" {
@@ -58,7 +58,7 @@ resource "aws_cloudwatch_event_rule" "rds_startup" {
   count               = var.namespace == "prod" ? "0" : "1"
   name                = "daily_rds_startup"
   description         = "Startup RDS Instances in notprod mornings weekday"
-  schedule_expression = "cron(00 9 ? * MON-FRI *)"
+  schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = "true"
 }
 
