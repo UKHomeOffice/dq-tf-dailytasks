@@ -23,6 +23,7 @@ resource "aws_lambda_function" "cleanup_snapshots" {
       filename,
       last_modified,
       source_code_hash,
+      runtime
     ]
   }
 }
