@@ -22,8 +22,7 @@ resource "aws_lambda_function" "cleanup_snapshots" {
     ignore_changes = [
       filename,
       last_modified,
-      source_code_hash,
-      runtime
+      source_code_hash
     ]
   }
 }
