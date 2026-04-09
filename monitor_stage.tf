@@ -11,7 +11,7 @@ resource "aws_lambda_function" "monitor_stage" {
   role             = aws_iam_role.monitor_stage[0].arn
   handler          = "monitor_stage.lambda_handler"
   source_code_hash = data.archive_file.monitor_stage_zip.output_base64sha256
-  runtime          = "python3.7"
+  runtime          = "python3.11"
   timeout          = "900"
   memory_size      = "128"
 
