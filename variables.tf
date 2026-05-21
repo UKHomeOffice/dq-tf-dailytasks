@@ -35,3 +35,13 @@ variable "account_id" {
     "prod"    = "337779336338"
   }
 }
+
+variable "ec2_prod_scheduled_instance_names" {
+  type        = list(string)
+  description = "Name tags for prod instances to start"
+  default = [
+    "ec2-staging-internal-tableau-apps-prod-dq",
+    "ec2-staging-ext-tableau-linux-apps-prod-dq",
+    "tab-dep-1-tableau-ops-prod-dq",
+  ]
+}

@@ -4,6 +4,11 @@ data "archive_file" "ec2_startup_zip" {
   output_path = "${local.path_module}/lambda/package/ec2_startup.zip"
 }
 
+data "archive_file" "ec2_startup_prod_zip" {
+  type        = "zip"
+  source_file = "${local.path_module}/lambda/code/ec2_startup_prod.py"
+  output_path = "${local.path_module}/lambda/package/ec2_startup_prod.zip"
+}
 
 resource "aws_kms_key" "dt_bucket_key" {
   count                   = var.namespace == "prod" ? "0" : "1"
@@ -58,6 +63,37 @@ resource "aws_lambda_function" "ec2_startup" {
   #   }
 }
 
+// separate prod function using a smaller script
+resource "aws_lambda_function" "ec2_startup_prod" {
+  count            = var.namespace == "prod" ? "0" : "0"
+  filename         = "${path.module}/lambda/package/ec2_startup_prod.zip"
+  function_name    = "${var.pipeline_name}-${var.namespace}-ec2-startup"
+  role             = aws_iam_role.ec2_startup[0].arn
+  handler          = "ec2_startup.lambda_handler"
+  source_code_hash = data.archive_file.ec2_startup_prod_zip.output_base64sha256
+  runtime          = "python3.11"
+  timeout          = "900"
+  memory_size      = "128"
+
+  tags = {
+    Name = "ec2-startup-${local.naming_suffix}"
+  }
+
+  environment {
+    variables = {
+      ACTIVE_REGION  = var.region
+      INSTANCE_NAMES = join(",", var.ec2_prod_scheduled_instance_names)
+    }
+  }
+
+  #   lifecycle {
+  #     ignore_changes = [
+  #       filename,
+  #       last_modified,
+  #       source_code_hash,
+  #     ]
+  #   }
+}
 
 
 resource "aws_iam_role" "ec2_startup" {
@@ -89,40 +125,44 @@ resource "aws_iam_policy" "ec2_startup" {
   count       = var.namespace == "prod" ? "0" : "1"
   name        = "${var.pipeline_name}-ec2-startup"
   path        = "/"
-  description = "IAM policy for describing snapshots"
+  description = "IAM policy for describing snapshots and startup instances"
 
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = concat(
+      [
         {
-            "Sid": "",
-            "Effect": "Allow",
-            "Action": [
-                "ec2:DescribeInstances",
-                "ec2:StartInstances"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Sid": "AllowS3GetObject",
-            "Effect": "Allow",
-            "Action": [
-                "s3:GetObject"
-            ],
-            "Resource": "arn:aws:s3:::s3-dq-httpd-config-bucket-notprod/ssl.conf"
-        },
-        {
-            "Sid": "",
-            "Effect": "Allow", 
-            "Action": [
-                "kms:*"                
-            ],
-            "Resource": "*"
+          Sid    = ""
+          Effect = "Allow"
+          Action = [
+            "ec2:DescribeInstances",
+            "ec2:StartInstances"
+          ]
+          Resource = "*"
         }
-    ]
-}
-EOF  
+      ],
+      var.namespace == "prod" ? [] : [
+        {
+          Sid    = "AllowS3GetObject"
+          Effect = "Allow"
+          Action = [
+            "s3:GetObject"
+          ]
+          Resource = "arn:aws:s3:::s3-dredacted/ssl.conf"
+        },
+        {
+          Sid    = ""
+          Effect = "Allow"
+          Action = [
+            "kms:*"
+          ]
+          Resource = "*"
+        }
+      ]
+    )
+  })
+
 
   depends_on = [aws_kms_key.dt_bucket_key]
 }
