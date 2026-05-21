@@ -48,8 +48,8 @@ resource "aws_lambda_function" "ec2_shutdown_prod" {
 
   environment {
     variables = {
-      ACTIVE_REGION               = var.region
-      SHUTDOWN_EXCLUDED_NAME_TAGS = join(",", var.ec2_prod_scheduled_instance_names)
+      ACTIVE_REGION  = var.region
+      INSTANCE_NAMES = join(",", var.ec2_prod_scheduled_instance_names)
     }
   }
 
