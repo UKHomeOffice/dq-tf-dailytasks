@@ -41,7 +41,7 @@ resource "aws_lambda_function" "ec2_shutdown_prod" {
   function_name    = "${var.pipeline_name}-${var.namespace}-ec2-shutdown"
   role             = aws_iam_role.ec2_shutdown[0].arn
   handler          = "ec2_shutdown.lambda_handler"
-  source_code_hash = data.archive_file.ec2_shutdown_prod_zip[0].output_base64sha256
+  source_code_hash = data.archive_file.ec2_shutdown_prod_zip.output_base64sha256
   runtime          = "python3.11"
   timeout          = 900
   memory_size      = 128
