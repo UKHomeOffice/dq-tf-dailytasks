@@ -1,7 +1,3 @@
-"""
-Prod scheduled EC2 startup: same outcome style as notprod (start if stopped)
-but only for Name tags in INSTANCE_NAMES — no ssl.conf / S3 / Tableau IP logic.
-"""
 import os
 import boto3
 
