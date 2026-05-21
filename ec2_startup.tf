@@ -149,7 +149,7 @@ resource "aws_iam_policy" "ec2_startup" {
           Action = [
             "s3:GetObject"
           ]
-          Resource = "arn:aws:s3:::s3-dredacted/ssl.conf"
+          Resource = "arn:aws:s3:::s3-dq-httpd-config-bucket-notprod/ssl.conf"
         },
         {
           Sid    = ""
