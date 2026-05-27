@@ -80,7 +80,7 @@ resource "aws_cloudwatch_event_rule" "ec2_shutdown" {
   name                = "daily_ec2_shutdown"
   description         = "Shutdown EC2 Instances in evenings and weekends"
   schedule_expression = "cron(0 17 ? * MON-FRI *)"
-  is_enabled          = var.namespace == "prod" ? false : true
+  is_enabled          = var.namespace == "prod" ? true : true
 }
 
 resource "aws_cloudwatch_event_target" "ec2_startup" {
@@ -101,7 +101,7 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   name                = "daily_ec2_startup"
   description         = "Startup EC2 Instances in mornings weekday"
   schedule_expression = "cron(00 5 ? * MON-FRI *)"
-  is_enabled          = var.namespace == "prod" ? false : true
+  is_enabled          = var.namespace == "prod" ? true : true
 }
 
 resource "aws_cloudwatch_event_target" "monitor_stage" {
