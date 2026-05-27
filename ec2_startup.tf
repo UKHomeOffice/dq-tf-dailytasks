@@ -163,7 +163,7 @@ resource "aws_iam_policy" "ec2_startup" {
     )
   })
 
-  depends_on = var.namespace == "prod" ? [] : [aws_kms_key.dt_bucket_key]
+  depends_on = [aws_kms_key.dt_bucket_key]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
