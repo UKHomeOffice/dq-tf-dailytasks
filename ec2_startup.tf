@@ -65,7 +65,7 @@ resource "aws_lambda_function" "ec2_startup" {
 
 // separate prod function using a smaller script
 resource "aws_lambda_function" "ec2_startup_prod" {
-  count            = var.namespace == "prod" ? "0" : "0"
+  count            = var.namespace == "prod" ? "1" : "0"
   filename         = "${path.module}/lambda/package/ec2_startup_prod.zip"
   function_name    = "${var.pipeline_name}-${var.namespace}-ec2-startup"
   role             = aws_iam_role.ec2_startup[0].arn
@@ -97,7 +97,7 @@ resource "aws_lambda_function" "ec2_startup_prod" {
 
 
 resource "aws_iam_role" "ec2_startup" {
-  count = var.namespace == "prod" ? "0" : "1"
+  count = var.namespace == "prod" ? "1" : "1"
   name  = "${var.pipeline_name}-${var.namespace}-ec2-startup"
 
   tags = {
@@ -122,7 +122,7 @@ EOF
 }
 
 resource "aws_iam_policy" "ec2_startup" {
-  count       = var.namespace == "prod" ? "0" : "1"
+  count       = var.namespace == "prod" ? "1" : "1"
   name        = "${var.pipeline_name}-ec2-startup"
   path        = "/"
   description = "IAM policy for describing snapshots and startup instances"
@@ -163,19 +163,18 @@ resource "aws_iam_policy" "ec2_startup" {
     )
   })
 
-
   depends_on = [aws_kms_key.dt_bucket_key]
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_startup" {
-  count      = var.namespace == "prod" ? "0" : "1"
+  count      = var.namespace == "prod" ? "1" : "1"
   role       = aws_iam_role.ec2_startup[0].name
   policy_arn = aws_iam_policy.ec2_startup[0].arn
 }
 
 resource "aws_cloudwatch_log_group" "lambda_ec2_startup" {
-  count             = var.namespace == "prod" ? "0" : "1"
-  name              = "/aws/lambda/${aws_lambda_function.ec2_startup[0].function_name}"
+  count             = var.namespace == "prod" ? "1" : "1"
+  name              = "/aws/lambda/${var.pipeline_name}-${var.namespace}-ec2-startup"
   retention_in_days = 14
 
   tags = {
@@ -184,7 +183,7 @@ resource "aws_cloudwatch_log_group" "lambda_ec2_startup" {
 }
 
 resource "aws_iam_policy" "lambda_ec2_startup_logging" {
-  count       = var.namespace == "prod" ? "0" : "1"
+  count       = var.namespace == "prod" ? "1" : "1"
   name        = "${var.pipeline_name}-ec2-startup-logging"
   path        = "/"
   description = "IAM policy for logging from a lambda"
@@ -211,7 +210,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_ec2_startup_logs" {
-  count      = var.namespace == "prod" ? "0" : "1"
+  count      = var.namespace == "prod" ? "1" : "1"
   role       = aws_iam_role.ec2_startup[0].name
   policy_arn = aws_iam_policy.lambda_ec2_startup_logging[0].arn
 }
