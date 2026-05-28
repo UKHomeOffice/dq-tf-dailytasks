@@ -83,6 +83,15 @@ resource "aws_cloudwatch_event_rule" "ec2_shutdown" {
   is_enabled          = var.namespace == "prod" ? true : true
 }
 
+resource "aws_lambda_permission" "ec2_shutdown" {
+  count         = var.namespace == "prod" ? "1" : "1"
+  action        = "lambda:InvokeFunction"
+  function_name = "${var.pipeline_name}-${var.namespace}-ec2-shutdown"
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.ec2_shutdown[0].arn
+}
+
+
 resource "aws_cloudwatch_event_target" "ec2_startup" {
   count = var.namespace == "prod" ? "1" : "1"
   rule  = aws_cloudwatch_event_rule.ec2_startup[0].name
@@ -103,6 +112,15 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   schedule_expression = "cron(00 5 ? * MON-FRI *)"
   is_enabled          = var.namespace == "prod" ? true : true
 }
+
+resource "aws_lambda_permission" "ec2_startup" {
+  count         = var.namespace == "prod" ? "1" : "1"
+  action        = "lambda:InvokeFunction"
+  function_name = "${var.pipeline_name}-${var.namespace}-ec2-startup"
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.ec2_startup[0].arn
+}
+
 
 resource "aws_cloudwatch_event_target" "monitor_stage" {
   count = var.namespace == "prod" ? "1" : "0"
