@@ -79,7 +79,7 @@ resource "aws_cloudwatch_event_rule" "ec2_shutdown" {
   count               = var.namespace == "prod" ? "1" : "1"
   name                = "daily_ec2_shutdown"
   description         = "Shutdown EC2 Instances in evenings and weekends"
-  schedule_expression = "cron(0 17 ? * MON-FRI *)"
+  schedule_expression = "cron(0 18 ? * MON-FRI *)"
   is_enabled          = var.namespace == "prod" ? true : true
 }
 
@@ -109,7 +109,7 @@ resource "aws_cloudwatch_event_rule" "ec2_startup" {
   count               = var.namespace == "prod" ? "1" : "1"
   name                = "daily_ec2_startup"
   description         = "Startup EC2 Instances in mornings weekday"
-  schedule_expression = "cron(00 5 ? * MON-FRI *)"
+  schedule_expression = "cron(00 6 ? * MON-FRI *)"
   is_enabled          = var.namespace == "prod" ? true : true
 }
 
